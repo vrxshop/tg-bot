@@ -20,7 +20,7 @@ ROLLYPAY_API_KEY = "z39_r_COJdiB7PWeddOYvzT2rx4cjIbS1m4JJcgBTi0"
 ROLLYPAY_CALLBACK_URL = "https://t-bot-18jz.onrender.com/webhook"
 
 # --- КОНФИГУРАЦИЯ БОТА ---
-BOT_TOKEN = "8843954886:AAEpfaWLm6sTfmq2T-mShBilX8mInCXs3as"
+BOT_TOKEN = "8298399133:AAFl5uIYOCCXIh6TM6Dn0AonL-Lyq39Wa3s"
 PROJECT_NAME = "VIP"
 SUPPORT_CONTACT_RU = "https://t.me/Nastia_sup"
 SUPPORT_CONTACT_EN = "https://t.me/Nastia_sup"
@@ -96,7 +96,7 @@ LANG = {
     }
 }
 
-# ТАРИФЫ (ключи изменены для RollyPay, названия и описания как на скринах)
+# ТАРИФЫ (ключи tariff_1 - tariff_10)
 TARIFFS = {
     "tariff_1": {
         "name_ru": "Слив знаменитостей 🥰",
@@ -357,9 +357,16 @@ async def back_to_prices(callback: CallbackQuery, state: FSMContext):
     await callback.answer()
     await callback.message.edit_text(LANG[lang]["prices_menu"], reply_markup=get_tariff_keyboard(lang))
 
+# Обработчик для всех тарифов (tariff_1 - tariff_10)
 @dp.callback_query(F.data.startswith("tariff_"))
 async def show_tariff_details(callback: CallbackQuery, state: FSMContext):
     tariff_key = callback.data.replace("tariff_", "")
+    
+    # Проверяем существует ли такой тариф
+    if tariff_key not in TARIFFS:
+        await callback.answer("❌ Тариф не найден", show_alert=True)
+        return
+        
     tariff = TARIFFS[tariff_key]
     lang = await get_lang(state)
     data = await state.get_data()
@@ -386,6 +393,11 @@ async def show_tariff_details(callback: CallbackQuery, state: FSMContext):
 @dp.callback_query(F.data.startswith("enter_promo_"))
 async def enter_promo(callback: CallbackQuery, state: FSMContext):
     tariff_key = callback.data.replace("enter_promo_", "")
+    
+    if tariff_key not in TARIFFS:
+        await callback.answer("❌ Тариф не найден", show_alert=True)
+        return
+        
     lang = await get_lang(state)
     await state.update_data(current_tariff=tariff_key)
     await callback.message.edit_text(
@@ -397,6 +409,11 @@ async def enter_promo(callback: CallbackQuery, state: FSMContext):
 @dp.callback_query(F.data.startswith("cancel_promo_"))
 async def cancel_promo(callback: CallbackQuery, state: FSMContext):
     tariff_key = callback.data.replace("cancel_promo_", "")
+    
+    if tariff_key not in TARIFFS:
+        await callback.answer("❌ Тариф не найден", show_alert=True)
+        return
+        
     lang = await get_lang(state)
     await state.clear()
     await callback.message.delete()
@@ -427,8 +444,9 @@ async def process_promo(message: Message, state: FSMContext):
     tariff_key = data.get("current_tariff")
     lang = await get_lang(state)
     
-    if not tariff_key:
+    if not tariff_key or tariff_key not in TARIFFS:
         await state.clear()
+        await message.answer("❌ Ошибка. Попробуйте выбрать тариф заново.")
         return
 
     if promo_code in PROMO_CODES:
@@ -448,6 +466,11 @@ async def process_promo(message: Message, state: FSMContext):
 @dp.callback_query(F.data.startswith("choose_pay_"))
 async def choose_payment(callback: CallbackQuery, state: FSMContext):
     tariff_key = callback.data.replace("choose_pay_", "")
+    
+    if tariff_key not in TARIFFS:
+        await callback.answer("❌ Тариф не найден", show_alert=True)
+        return
+        
     lang = await get_lang(state)
     data = await state.get_data()
     discount = data.get("discount", 0)
@@ -469,6 +492,11 @@ async def choose_payment(callback: CallbackQuery, state: FSMContext):
 @dp.callback_query(F.data.startswith("pay_rub_"))
 async def process_rub_payment(callback: CallbackQuery, state: FSMContext):
     tariff_key = callback.data.replace("pay_rub_", "")
+    
+    if tariff_key not in TARIFFS:
+        await callback.answer("❌ Тариф не найден", show_alert=True)
+        return
+        
     lang = await get_lang(state)
     data = await state.get_data()
     discount = data.get("discount", 0)
@@ -496,6 +524,11 @@ async def process_rub_payment(callback: CallbackQuery, state: FSMContext):
 @dp.callback_query(F.data.startswith("pay_stars_"))
 async def process_stars_payment(callback: CallbackQuery, state: FSMContext):
     tariff_key = callback.data.replace("pay_stars_", "")
+    
+    if tariff_key not in TARIFFS:
+        await callback.answer("❌ Тариф не найден", show_alert=True)
+        return
+        
     lang = await get_lang(state)
     data = await state.get_data()
     discount = data.get("discount", 0)
@@ -523,6 +556,11 @@ async def process_stars_payment(callback: CallbackQuery, state: FSMContext):
 @dp.callback_query(F.data.startswith("refresh_link_"))
 async def refresh_link(callback: CallbackQuery, state: FSMContext):
     tariff_key = callback.data.replace("refresh_link_", "")
+    
+    if tariff_key not in TARIFFS:
+        await callback.answer("❌ Тариф не найден", show_alert=True)
+        return
+        
     tariff = TARIFFS[tariff_key]
     user_id = callback.from_user.id
     final_price = tariff['price_rub']
