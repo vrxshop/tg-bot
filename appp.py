@@ -259,6 +259,34 @@ async def get_lang(state: FSMContext):
     data = await state.get_data()
     return data.get("lang", "ru")
 
+# --- ФУНКЦИЯ СБРОСА ВСЕГО ---
+async def full_reset():
+    """Полный сброс: удаление вебхука и принудительный перезапуск"""
+    print("🔄 Выполняю полный сброс...")
+    try:
+        # 1. Удаляем вебхук
+        webhook_info = await bot.get_webhook_info()
+        if webhook_info.url:
+            print(f"   📍 Найден вебхук: {webhook_info.url}")
+            await bot.delete_webhook(drop_pending_updates=True)
+            print("   ✅ Вебхук удалён")
+        else:
+            print("   ℹ️ Вебхук не был установлен")
+        
+        # 2. Закрываем старую сессию
+        await bot.session.close()
+        print("   ✅ Старая сессия закрыта")
+        
+        # 3. Создаём новую сессию
+        new_session = AiohttpSession()
+        bot.session = new_session
+        print("   ✅ Новая сессия создана")
+        
+        return True
+    except Exception as e:
+        print(f"   ❌ Ошибка при сбросе: {e}")
+        return False
+
 # --- КЛАВИАТУРЫ ---
 def get_main_keyboard(lang):
     return ReplyKeyboardMarkup(keyboard=[
@@ -321,10 +349,11 @@ def get_back_to_prices_keyboard(lang="ru"):
 async def set_bot_commands():
     commands = [
         BotCommand(command="start", description="Запустить бота / Start bot"),
-        BotCommand(command="language", description="Сменить язык / Change language")
+        BotCommand(command="language", description="Сменить язык / Change language"),
+        BotCommand(command="reset", description="Сбросить бота (админ)")
     ]
     await bot.set_my_commands(commands)
-    print("✅ Команды /start и /language установлены в меню!")
+    print("✅ Команды установлены в меню!")
 
 # --- ТЕКСТЫ ДЛЯ МЕНЮ ---
 MAIN_MENU_TEXT = """После выбора и оплаты тарифа бот автоматически тебе выдаст доступ на вход в группу. На случай потери ссылки на нашу випку, ты сможешь всегда её запросить повторно у бота, это бесплатно.
@@ -359,6 +388,28 @@ async def cmd_start(message: Message, state: FSMContext):
         MAIN_MENU_TEXT,
         reply_markup=get_tariff_keyboard(lang)
     )
+
+@dp.message(Command("reset"))
+async def cmd_reset(message: Message, state: FSMContext):
+    """Команда для сброса бота (только для админа)"""
+    # Проверяем что это админ (замени на свой ID)
+    ADMIN_ID = 8559381302  # Замени на свой Telegram ID
+    
+    if message.from_user.id != ADMIN_ID:
+        await message.answer("❌ У вас нет прав для этой команды!")
+        return
+    
+    await message.answer("🔄 Выполняю сброс бота...")
+    
+    success = await full_reset()
+    
+    if success:
+        await message.answer("✅ Бот успешно сброшен! Перезапускаю...")
+        # Перезапускаем бота
+        await dp.stop_polling()
+        # Бот перезапустится автоматически
+    else:
+        await message.answer("❌ Ошибка при сбросе. Проверьте логи.")
 
 @dp.message(Command("language"))
 async def cmd_language(message: Message, state: FSMContext):
@@ -647,24 +698,29 @@ async def start_web_server():
 async def main():
     logging.basicConfig(level=logging.INFO)
     
-    # Запускаем веб-сервер для Render
+    print("🚀 ЗАПУСК БОТА")
+    print("=" * 40)
+    
+    # 1. ПРИНУДИТЕЛЬНЫЙ СБРОС ВЕБХУКА ПРИ ЗАПУСКЕ
+    await full_reset()
+    
+    print("=" * 40)
+    
+    # 2. Запускаем веб-сервер для Render
     runner = await start_web_server()
     
-    # Проверяем вебхук
-    try:
-        webhook_info = await bot.get_webhook_info()
-        if webhook_info.url:
-            logging.info(f"ℹ️ Активный вебхук: {webhook_info.url}")
-        else:
-            logging.info("ℹ️ Вебхук не был установлен")
-    except Exception as e:
-        logging.error(f"Ошибка проверки вебхука: {e}")
-    
+    # 3. Устанавливаем команды
     await set_bot_commands()
     
+    print("=" * 40)
     print("🤖 Бот полностью готов!")
-    print(f"✅ Веб-сервер доступен по адресу: https://your-service.onrender.com")
+    print("📱 Команды:")
+    print("   /start - запустить бота")
+    print("   /language - сменить язык")
+    print("   /reset - сбросить бота (админ)")
+    print("=" * 40)
     
+    # 4. Запускаем polling
     await dp.start_polling(bot)
 
 if __name__ == "__main__":
