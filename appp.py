@@ -317,22 +317,6 @@ def get_back_to_prices_keyboard(lang="ru"):
         [InlineKeyboardButton(text=LANG[lang]["btn_to_prices"], callback_data="back_to_prices")]
     ])
 
-# --- ФУНКЦИЯ ДЛЯ СБРОСА ВЕБХУКА ---
-async def reset_webhook():
-    """Принудительный сброс вебхука перед запуском polling"""
-    try:
-        webhook_info = await bot.get_webhook_info()
-        if webhook_info.url:
-            logging.info(f"🔄 Найден активный вебхук: {webhook_info.url}")
-            await bot.delete_webhook(drop_pending_updates=True)
-            logging.info("✅ Вебхук успешно удалён!")
-        else:
-            logging.info("ℹ️ Вебхук не был установлен")
-        return True
-    except Exception as e:
-        logging.error(f"❌ Ошибка при сбросе вебхука: {e}")
-        return False
-
 # --- НАСТРОЙКА МЕНЮ КОМАНД ---
 async def set_bot_commands():
     commands = [
@@ -661,19 +645,6 @@ async def start_web_server():
 
 # --- ЗАПУСК ---
 async def main():
-    logging.basicConfig(level=logging.INFO)
-    
-    # СБРАСЫВАЕМ ВЕБХУК
-    await reset_webhook()
-    
-    # Запускаем веб-сервер для Render
-    runner = await start_web_server()
-    
-    await set_bot_commands()
-    
-    print("🤖 Бот полностью готов!")
-    await dp.start_polling(bot)
-    
     logging.basicConfig(level=logging.INFO)
     
     # Запускаем веб-сервер для Render
