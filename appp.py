@@ -15,12 +15,11 @@ from aiogram.fsm.state import State, StatesGroup
 from aiogram.fsm.storage.memory import MemoryStorage
 from aiohttp import web
 
-# --- КОНФИГУРАЦИЯ RollyPay ---
+# --- КОНФИГУРАЦИЯ ---
+BOT_TOKEN = "8843954886:AAEpfaWLm6sTfmq2T-mShBilX8mInCXs3as"
 ROLLYPAY_API_KEY = "z39_r_COJdiB7PWeddOYvzT2rx4cjIbS1m4JJcgBTi0"
 ROLLYPAY_CALLBACK_URL = "https://t-bot-18jz.onrender.com/webhook"
 
-# --- КОНФИГУРАЦИЯ БОТА ---
-BOT_TOKEN = "8843954886:AAEpfaWLm6sTfmq2T-mShBilX8mInCXs3as"
 PROJECT_NAME = "VIP"
 SUPPORT_CONTACT_RU = "https://t.me/Nastia_sup"
 SUPPORT_CONTACT_EN = "https://t.me/Nastia_sup"
@@ -96,7 +95,7 @@ LANG = {
     }
 }
 
-# ТАРИФЫ (полностью как на скринах)
+# ТАРИФЫ
 TARIFFS = {
     "tariff_1": {
         "name_ru": "🎁 Слив знаменитостей 🌟",
@@ -105,6 +104,7 @@ TARIFFS = {
         "price_stars": 90,
         "duration_ru": "1 месяц",
         "duration_en": "1 month",
+        "category": "main",
         "desc_ru": "Вы получите доступ к следующим ресурсам:\n• Знаменитости VBlinse💝 (канал)\n\n❗️Что есть в привате?\n\nСливы Аринян, Маряны Ро, Эммы Гловер, RocksyLight, Генсухи, Инстасамки, Леи Горной, Чио Ям, Оляши, yuuiechka, Клубнички Лизы и др."
     },
     "tariff_2": {
@@ -114,6 +114,7 @@ TARIFFS = {
         "price_stars": 300,
         "duration_ru": "1 месяц",
         "duration_en": "1 month",
+        "category": "main",
         "desc_ru": "Вы получите доступ к следующим ресурсам:\n• H2 (канал)\n\n❗️ После покупки вы попадете в приватный канал со сливом девушек\n\n✅ Что в канале? П0pнo девок 13-19, а так-же слив и их разводом на фото, видео и \"беседы\" в скайпе, иногда ссылками на соц сети и Некоторых особых шкур есть номера и страницы вк\n\n❓Уровень? В основном 14-20, но встречаются и до 14 Вo3pacT\n\n✅ Помимо канала прилагается еще немного архивов с шкурками"
     },
     "tariff_3": {
@@ -123,6 +124,7 @@ TARIFFS = {
         "price_stars": 450,
         "duration_ru": "1 месяц",
         "duration_en": "1 month",
+        "category": "main",
         "desc_ru": "Это мини пак с огромным количеством небольших видео\n\n❗️ После покyпки вы попадете в привaтный kaнал с de**ским пopno довольно таки жectkиm.\n\n✅ Уровень? i1-i12 вo3PacT, ceks, изnocuловаnие, инцceT, ласкает себя и т.д.\n\n✅ Помимо видео прилагается еще архивы с множеством гб"
     },
     "tariff_4": {
@@ -132,6 +134,7 @@ TARIFFS = {
         "price_stars": 700,
         "duration_ru": "1 месяц",
         "duration_en": "1 month",
+        "category": "main",
         "desc_ru": "❗️ После покупки вы попадете в приватный канал с цe**льным пpоцe**poм пopno\n\n✅ Большой сборник из мега подборки пopно ваших любимых шкoльниц возрастом от 12 до 17 🔥 , есть изnocuлование, инцceT, много сливов с впиcoк и просто cлив шkyp, скрытые камеры шkoльниц/стyдeнток и ceксoм, ласкает себя и т.д.\n\n✅ Помимо видео прилагается еще архивы с множеством гб этой категории.\n\nКонтента очень много"
     },
     "tariff_5": {
@@ -141,6 +144,7 @@ TARIFFS = {
         "price_stars": 800,
         "duration_ru": "1 месяц",
         "duration_en": "1 month",
+        "category": "main",
         "desc_ru": "❗️ После покyпки вы попадете в привaтный kaнал с de**ским пopno довольно таки жectkиm.\n\n✅ Уровень? i1-i12 вo3PacT, ceks, изnocuловаnие, инцceT, ласкает себя и т.д.\n\n✅ Помимо видео прилагается еще архивы с множеством гб\n\nКонтента очень много"
     },
     "tariff_6": {
@@ -150,6 +154,7 @@ TARIFFS = {
         "price_stars": 200,
         "duration_ru": "2 месяца",
         "duration_en": "2 months",
+        "category": "main",
         "desc_ru": "Канал с зоо контентом"
     },
     "tariff_7": {
@@ -159,6 +164,7 @@ TARIFFS = {
         "price_stars": 250,
         "duration_ru": "1 месяц",
         "duration_en": "1 month",
+        "category": "main",
         "desc_ru": "Вы получите доступ к следующим ресурсам:\n• Gg (канал)\n\n❗️ После покупки вы попадете в приватный канал с м+м\n\n✅ Уровень? Есть до 12, но в основном видео 12-17, есть немного изnocuлование, инцceT, скрытые камеры шkoльнов/стyдeнтов и конечно основное же ceкс и минет\n\n✅ Помимо видео прилагается еще дополнительный архив."
     },
     "tariff_8": {
@@ -168,6 +174,7 @@ TARIFFS = {
         "price_stars": 450,
         "duration_ru": "1 месяц",
         "duration_en": "1 month",
+        "category": "paki",
         "desc_ru": "Чтo тебя ждeт в нaшu̸х прu̸вαтαх\n\nЖестκu̸e uu̸знαсu̸лвaнu̸я 3αkладчu̸ц\n0тсосы, е6ля зαкладчu̸ц в пoсαдкαх\nПолные вu̸део с зαкладчu̸цамu̸"
     },
     "tariff_9": {
@@ -177,6 +184,7 @@ TARIFFS = {
         "price_stars": 3500,
         "duration_ru": "Бессрочно",
         "duration_en": "Forever",
+        "category": "main",
         "desc_ru": "❗️Вы получите доступ сразу в 10 наших каналов при этом их подписка останется у вас НАВСЕГДА! А выйдет гораздо дешевле чем покупать по отдельности.\n\n🔥 Кoнтeнтa у вас выйдет очень МНОГО\n\n+ Бонусные каналы к тарифу"
     },
     "tariff_10": {
@@ -186,6 +194,7 @@ TARIFFS = {
         "price_stars": 9000,
         "duration_ru": "1 день",
         "duration_en": "1 day",
+        "category": "main",
         "desc_ru": "Не покупать, читайте описание.\n\n✅ Хороший VPN для обхода белых списков.\n\nПереходим по ссылке:\nhttps://t.me/velvet_vpn_bot?start=AW3BJ7lz\n\nВам дают 2 дня бесплатного доступа, а также вводим ещё 2 секретных промокода на 7 дней:\n\nWELCOME_BACK\nJUSTTRY"
     },
     "tariff_11": {
@@ -195,6 +204,7 @@ TARIFFS = {
         "price_stars": 600,
         "duration_ru": "21 дней",
         "duration_en": "21 days",
+        "category": "paki",
         "desc_ru": "Cливaeм ccлыки дpyгиx кaнaлoв, peкoмeндyeм пoкyпaть пocлe пpocмoтpa дpyгиx тapифoв\n\nЕдинственный пак который не входит во всё включено"
     }
 }
@@ -211,24 +221,6 @@ dp = Dispatcher(storage=storage)
 
 class PromoStates(StatesGroup):
     waiting_for_promo = State()
-
-# --- ФУНКЦИЯ ДЛЯ СБРОСА ВЕБХУКА ---
-async def reset_webhook():
-    """Принудительный сброс вебхука перед запуском polling"""
-    try:
-        # Получаем информацию о текущем вебхуке
-        webhook_info = await bot.get_webhook_info()
-        if webhook_info.url:
-            logging.info(f"🔄 Найден активный вебхук: {webhook_info.url}")
-            # Удаляем вебхук
-            await bot.delete_webhook(drop_pending_updates=True)
-            logging.info("✅ Вебхук успешно удалён!")
-        else:
-            logging.info("ℹ️ Вебхук не был установлен")
-        return True
-    except Exception as e:
-        logging.error(f"❌ Ошибка при сбросе вебхука: {e}")
-        return False
 
 # --- ФУНКЦИЯ ДЛЯ RollyPay ---
 async def create_rollypay_payment(amount: int, user_id: int, tariff_key: str, tariff_name: str) -> str:
@@ -272,10 +264,24 @@ def get_main_keyboard(lang):
     ], resize_keyboard=True)
 
 def get_tariff_keyboard(lang):
+    """Главное меню тарифов (без паков)"""
     buttons = []
     for key, data in TARIFFS.items():
-        name = data['name_ru'] if lang == 'ru' else data['name_en']
-        buttons.append([InlineKeyboardButton(text=f"{name} • {data['price_rub']} 🇷🇺RUB", callback_data=f"tariff_{key}")])
+        if data.get("category") == "main":
+            name = data['name_ru'] if lang == 'ru' else data['name_en']
+            buttons.append([InlineKeyboardButton(text=f"{name} • {data['price_rub']} 🇷🇺RUB", callback_data=f"tariff_{key}")])
+    # Добавляем кнопку "Паки"
+    buttons.append([InlineKeyboardButton(text="👈🏻 Паки", callback_data="show_paki")])
+    return InlineKeyboardMarkup(inline_keyboard=buttons)
+
+def get_paki_keyboard(lang):
+    """Меню паков"""
+    buttons = []
+    for key, data in TARIFFS.items():
+        if data.get("category") == "paki":
+            name = data['name_ru'] if lang == 'ru' else data['name_en']
+            buttons.append([InlineKeyboardButton(text=f"{name} • {data['price_rub']} 🇷🇺RUB", callback_data=f"tariff_{key}")])
+    buttons.append([InlineKeyboardButton(text="👈 НАЗАД", callback_data="back_to_prices")])
     return InlineKeyboardMarkup(inline_keyboard=buttons)
 
 def get_payment_method_keyboard(tariff_key, discount_percent=0, lang="ru"):
@@ -319,6 +325,13 @@ async def set_bot_commands():
     await bot.set_my_commands(commands)
     print("✅ Команды /start и /language установлены в меню!")
 
+# --- ТЕКСТЫ ДЛЯ МЕНЮ ---
+MAIN_MENU_TEXT = """После выбора и оплаты тарифа бот автоматически тебе выдаст доступ на вход в группу. На случай потери ссылки на нашу випку, ты сможешь всегда её запросить повторно у бота, это бесплатно.
+
+Нажми на тариф чтобы прочесть описание.
+
+Каждый канал отличается"""
+
 # --- ХЭНДЛЕРЫ ---
 
 @dp.message(CommandStart())
@@ -338,18 +351,11 @@ async def cmd_start(message: Message, state: FSMContext):
 
 Если бот не доступен пиши мне
 
-Тех.поддержка: @vmolins1
-
-После выбора и оплаты тарифа бот автоматически тебе выдаст доступ на вход в группу. На случай потери ссылки на нашу випку, ты сможешь всегда её запросить повторно у бота, это бесплатно.
-
-Нажми на тариф чтобы прочесть описание.
-
-Каждый канал отличается
-Паки 👈🏻.."""
+Тех.поддержка: @vmolins1"""
     
     await message.answer(text, disable_web_page_preview=True)
     await message.answer(
-        LANG[lang]["prices_menu"],
+        MAIN_MENU_TEXT,
         reply_markup=get_tariff_keyboard(lang)
     )
 
@@ -380,7 +386,7 @@ async def process_lang_change(callback: CallbackQuery, state: FSMContext):
 @dp.message(F.text.in_([LANG["ru"]["btn_prices"], LANG["en"]["btn_prices"]]))
 async def show_prices(message: Message, state: FSMContext):
     lang = await get_lang(state)
-    await message.answer(LANG[lang]["prices_menu"], reply_markup=get_tariff_keyboard(lang))
+    await message.answer(MAIN_MENU_TEXT, reply_markup=get_tariff_keyboard(lang))
 
 @dp.message(F.text.in_([LANG["ru"]["btn_subs"], LANG["en"]["btn_subs"]]))
 async def show_subscriptions(message: Message, state: FSMContext):
@@ -391,7 +397,13 @@ async def show_subscriptions(message: Message, state: FSMContext):
 async def back_to_prices(callback: CallbackQuery, state: FSMContext):
     lang = await get_lang(state)
     await callback.answer()
-    await callback.message.edit_text(LANG[lang]["prices_menu"], reply_markup=get_tariff_keyboard(lang))
+    await callback.message.edit_text(MAIN_MENU_TEXT, reply_markup=get_tariff_keyboard(lang))
+
+@dp.callback_query(F.data == "show_paki")
+async def show_paki(callback: CallbackQuery, state: FSMContext):
+    lang = await get_lang(state)
+    await callback.answer()
+    await callback.message.edit_text(MAIN_MENU_TEXT, reply_markup=get_paki_keyboard(lang))
 
 @dp.callback_query(F.data.startswith("tariff_"))
 async def show_tariff_details(callback: CallbackQuery, state: FSMContext):
@@ -415,8 +427,8 @@ async def show_tariff_details(callback: CallbackQuery, state: FSMContext):
         price_line = f"💰 Цена: <s>{tariff['price_rub']} 🇷🇺RUB</s> → {new_price} 🇷🇺RUB <b>(-{discount}%)</b>"
     else:
         price_line = f"💰 Цена: {tariff['price_rub']} 🇷🇺RUB"
-        
-    text = LANG[lang]["tariff_desc"].format(name=name, price_line=price_line, desc=desc)
+    
+    text = f"📋 <b>{name}</b>\n\n{price_line}\nСрок действия: {duration}\n\n{desc}"
     
     await callback.message.edit_text(text, reply_markup=get_payment_method_keyboard(tariff_key, discount, lang))
 
@@ -460,7 +472,7 @@ async def cancel_promo(callback: CallbackQuery, state: FSMContext):
     else:
         price_line = f"💰 Цена: {tariff['price_rub']} RUB"
 
-    text = LANG[lang]["tariff_desc"].format(name=name, price_line=price_line, desc=desc)
+    text = f"📋 <b>{name}</b>\n\n{price_line}\nСрок действия: {duration}\n\n{desc}"
     await callback.message.answer(text, reply_markup=get_payment_method_keyboard(tariff_key, discount, lang))
 
 @dp.message(PromoStates.waiting_for_promo)
@@ -575,8 +587,6 @@ async def confirm_payment(callback: CallbackQuery, state: FSMContext):
         return
         
     lang = await get_lang(state)
-    tariff = TARIFFS[tariff_key]
-    name = tariff['name_ru'] if lang == "ru" else tariff['name_en']
     
     text = f"""💁🏻‍♂️ Оплатили?
 
@@ -592,18 +602,45 @@ ______________________
     ])
     await callback.message.edit_text(text, reply_markup=kb)
 
+# --- ВЕБ-СЕРВЕР ДЛЯ UPTIMEROBOT ---
+async def handle_uptime_check(request):
+    return web.Response(text="Bot is alive and kicking!")
+
+async def start_web_server():
+    app = web.Application()
+    app.router.add_get('/', handle_uptime_check)
+    app.router.add_get('/health', handle_uptime_check)
+    
+    port = int(os.environ.get("PORT", 8080))
+    runner = web.AppRunner(app)
+    await runner.setup()
+    site = web.TCPSite(runner, host='0.0.0.0', port=port)
+    await site.start()
+    print(f"✅ Веб-сервер для UptimeRobot запущен на порту {port}")
+    return runner
+
 # --- ЗАПУСК ---
 async def main():
     logging.basicConfig(level=logging.INFO)
     
-    # 1. СБРАСЫВАЕМ ВЕБХУК ПРИ ЗАПУСКЕ
-    await reset_webhook()
+    # Запускаем веб-сервер
+    runner = await start_web_server()
     
-    # 2. Устанавливаем команды
+    # Проверяем вебхук
+    try:
+        webhook_info = await bot.get_webhook_info()
+        if webhook_info.url:
+            logging.info(f"ℹ️ Активный вебхук: {webhook_info.url}")
+        else:
+            logging.info("ℹ️ Вебхук не был установлен")
+    except Exception as e:
+        logging.error(f"Ошибка проверки вебхука: {e}")
+    
     await set_bot_commands()
     
-    # 3. Запускаем polling
     print("🤖 Бот полностью готов!")
+    print(f"✅ Веб-сервер доступен по адресу: https://your-service.onrender.com")
+    
     await dp.start_polling(bot)
 
 if __name__ == "__main__":
