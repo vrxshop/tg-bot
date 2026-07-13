@@ -664,6 +664,29 @@ async def start_web_server():
 
 # --- ЗАПУСК ---
 async def main():
+    async def main():
+    logging.basicConfig(level=logging.INFO)
+    
+    # === ПРИНУДИТЕЛЬНЫЙ СБРОС ===
+    try:
+        # Удаляем вебхук с принудительным сбросом всех обновлений
+        await bot.delete_webhook(drop_pending_updates=True)
+        print("✅ Вебхук удалён!")
+        
+        # Закрываем старую сессию
+        await bot.session.close()
+        print("✅ Старая сессия закрыта!")
+        
+        # Создаём новую сессию
+        new_session = AiohttpSession()
+        bot.session = new_session
+        print("✅ Новая сессия создана!")
+    except Exception as e:
+        print(f"❌ Ошибка сброса: {e}")
+    # ============================
+    
+    print("🚀 ЗАПУСК БОТА")
+    # ... остальной код
     logging.basicConfig(level=logging.INFO)
     
     print("🚀 ЗАПУСК БОТА")
