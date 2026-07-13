@@ -664,7 +664,6 @@ async def start_web_server():
 
 # --- ЗАПУСК ---
 async def main():
-    async def main():
     logging.basicConfig(level=logging.INFO)
     
     # === ПРИНУДИТЕЛЬНЫЙ СБРОС ===
@@ -684,10 +683,6 @@ async def main():
     except Exception as e:
         print(f"❌ Ошибка сброса: {e}")
     # ============================
-    
-    print("🚀 ЗАПУСК БОТА")
-    # ... остальной код
-    logging.basicConfig(level=logging.INFO)
     
     print("🚀 ЗАПУСК БОТА")
     print("=" * 40)
