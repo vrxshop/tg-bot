@@ -212,6 +212,24 @@ dp = Dispatcher(storage=storage)
 class PromoStates(StatesGroup):
     waiting_for_promo = State()
 
+# --- ФУНКЦИЯ ДЛЯ СБРОСА ВЕБХУКА ---
+async def reset_webhook():
+    """Принудительный сброс вебхука перед запуском polling"""
+    try:
+        # Получаем информацию о текущем вебхуке
+        webhook_info = await bot.get_webhook_info()
+        if webhook_info.url:
+            logging.info(f"🔄 Найден активный вебхук: {webhook_info.url}")
+            # Удаляем вебхук
+            await bot.delete_webhook(drop_pending_updates=True)
+            logging.info("✅ Вебхук успешно удалён!")
+        else:
+            logging.info("ℹ️ Вебхук не был установлен")
+        return True
+    except Exception as e:
+        logging.error(f"❌ Ошибка при сбросе вебхука: {e}")
+        return False
+
 # --- ФУНКЦИЯ ДЛЯ RollyPay ---
 async def create_rollypay_payment(amount: int, user_id: int, tariff_key: str, tariff_name: str) -> str:
     url = "https://rollypay.io/api/v1/payments"
@@ -578,14 +596,13 @@ ______________________
 async def main():
     logging.basicConfig(level=logging.INFO)
     
-    try:
-        webhook_info = await bot.get_webhook_info()
-        if webhook_info.url:
-            await bot.delete_webhook(drop_pending_updates=True)
-    except Exception:
-        pass
+    # 1. СБРАСЫВАЕМ ВЕБХУК ПРИ ЗАПУСКЕ
+    await reset_webhook()
     
+    # 2. Устанавливаем команды
     await set_bot_commands()
+    
+    # 3. Запускаем polling
     print("🤖 Бот полностью готов!")
     await dp.start_polling(bot)
 
