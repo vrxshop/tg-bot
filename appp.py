@@ -15,11 +15,12 @@ from aiogram.fsm.state import State, StatesGroup
 from aiogram.fsm.storage.memory import MemoryStorage
 from aiohttp import web
 
-# --- КОНФИГУРАЦИЯ ---
-BOT_TOKEN = "8843954886:AAEpfaWLm6sTfmq2T-mShBilX8mInCXs3as"
+# --- КОНФИГУРАЦИЯ RollyPay ---
 ROLLYPAY_API_KEY = "z39_r_COJdiB7PWeddOYvzT2rx4cjIbS1m4JJcgBTi0"
 ROLLYPAY_CALLBACK_URL = "https://t-bot-18jz.onrender.com/webhook"
 
+# --- КОНФИГУРАЦИЯ БОТА ---
+BOT_TOKEN = "8843954886:AAEpfaWLm6sTfmq2T-mShBilX8mInCXs3as"
 PROJECT_NAME = "VIP"
 SUPPORT_CONTACT_RU = "https://t.me/Nastia_sup"
 SUPPORT_CONTACT_EN = "https://t.me/Nastia_sup"
@@ -44,8 +45,8 @@ LANG = {
         "enter_promo": "🏷️ <b>Введите код промокода</b>\n\nНапишите промокод в чат.",
         "promo_success": "✅ Промокод <b>{code}</b> активирован! Скидка {discount}% 🔥\n\n📋 <b>{name}</b>\n💰 Цена: <s>{old_rub} RUB</s> → {new_rub} RUB <b>(-{discount}%)</b>\n\nВыберите валюту для оплаты.",
         "promo_fail": "❌ Промокод не найден. Попробуйте еще раз (или нажмите ◀️ Отмена).",
-        "choose_pay": "📋 <b>{name}</b>\nСрок доступа: {duration}\n💰 Цена: {price_text}\n\nВыберите способ оплаты:",
-        "pay_rub": "📋 <b>{name}</b>\nСрок доступа: {duration}\n{price_line}💳 Способ оплаты: RollyPay\n\n💰 Итоговая стоимость: {final} RUB\n\n✅ Счёт на оплату сформирован. Доступы к закрытым сообществам будут открыты, как только вы оплатите его.",
+        "choose_pay": "📋 <b>{name}</b>\nСрок доступа: {duration}\n💰 Цена: {price_text}\n\n🔒 Будет получен доступ к:\n• {project} (внешняя ссылка)\n\nВыберите валюту для оплаты тарифа",
+        "pay_rub": "📋 <b>{name}</b>\nСрок доступа: {duration}\n{price_line}💳 Способ оплаты: RollyPay\n\n💰 Итоговая стоимость: {final} RUB\n\n🔒 Будет получен доступ к:\n• {project} (внешняя ссылка)\n\n✅ Счет на оплату сформирован! Сразу же после оплаты здесь появятся ссылки с доступами",
         "pay_stars": "📋 <b>{name}</b>\nСрок доступа: {duration}\n{price_line}💳 Способ оплаты: ЗА ЗВЕЗДЫ ⭐\n\n💰 Итоговая стоимость: {final} STARS\n\nℹ️ <b>Информация по оплате</b>\nПодарить звезды или подарки на этот аккаунт - <a href=\"{support}\">@Nastia_sup</a>\n\nкурс:\n1 ⭐ - 1 рубль\n\nОтправьте скриншот или файл подтверждения оплаты - он будет передан продавцу.\n\n⚠️ <b>Внимание:</b> на квитанции должны быть четко видны: дата, время и сумма платежа!\nЗа поддельные скриншоты продавец вас может заблокировать!",
         "refresh_link": "♻️ <i>Ссылка обновлена!</i>",
         "btn_prices": "💵 Тарифы",
@@ -73,8 +74,8 @@ LANG = {
         "enter_promo": "🏷️ <b>Enter promo code</b>\n\nType the promo code in the chat.",
         "promo_success": "✅ Promo code <b>{code}</b> activated! {discount}% discount 🔥\n\n📋 <b>{name}</b>\n💰 Price: <s>{old_rub} RUB</s> → {new_rub} RUB <b>(-{discount}%)</b>\n\nChoose a currency for payment.",
         "promo_fail": "❌ Promo code not found. Try again (or press ◀️ Cancel).",
-        "choose_pay": "📋 <b>{name}</b>\nAccess duration: {duration}\n💰 Price: {price_text}\n\nChoose payment method:",
-        "pay_rub": "📋 <b>{name}</b>\nAccess duration: {duration}\n{price_line}💳 Payment method: RollyPay\n\n💰 Total cost: {final} RUB\n\n✅ Invoice created! Access will be granted after payment.",
+        "choose_pay": "📋 <b>{name}</b>\nAccess duration: {duration}\n💰 Price: {price_text}\n\n🔒 You will get access to:\n• {project} (external link)\n\nChoose a currency for payment",
+        "pay_rub": "📋 <b>{name}</b>\nAccess duration: {duration}\n{price_line}💳 Payment method: RollyPay\n\n💰 Total cost: {final} RUB\n\n🔒 You will get access to:\n• {project} (external link)\n\n✅ Invoice created! Right after payment, access links will appear here",
         "pay_stars": "📋 <b>{name}</b>\nAccess duration: {duration}\n{price_line}💳 Payment method: FOR STARS ⭐\n\n💰 Total cost: {final} STARS\n\nℹ️ <b>Payment info</b>\nSend stars or gifts to this account - <a href=\"{support}\">@Nastia_sup</a>\n\nRate:\n1 ⭐ - 1 ruble\n\nSend a screenshot or file confirming payment - it will be forwarded to the seller.\n\n⚠️ <b>Attention:</b> the receipt must clearly show: date, time, and payment amount!\nFor fake screenshots, the seller may block you!",
         "refresh_link": "♻️ <i>Link refreshed!</i>",
         "btn_prices": "💵 Prices",
@@ -224,6 +225,7 @@ class PromoStates(StatesGroup):
 
 # --- ФУНКЦИЯ ДЛЯ RollyPay ---
 async def create_rollypay_payment(amount: int, user_id: int, tariff_key: str, tariff_name: str) -> str:
+    """Создает платеж в RollyPay и возвращает ссылку на оплату."""
     url = "https://rollypay.io/api/v1/payments"
     headers = {
         "X-API-Key": ROLLYPAY_API_KEY,
@@ -234,7 +236,7 @@ async def create_rollypay_payment(amount: int, user_id: int, tariff_key: str, ta
         "amount": str(amount),
         "payment_currency": "RUB",
         "order_id": f"order_{user_id}_{tariff_key}_{int(asyncio.get_event_loop().time())}",
-        "description": "Оплата доступа к контенту",
+        "description": f"Оплата тарифа {tariff_name} для пользователя {user_id}",
         "callback_url": ROLLYPAY_CALLBACK_URL,
         "success_url": "https://t.me/blogprivatbot",
         "fail_url": "https://t.me/blogprivatbot",
@@ -270,7 +272,6 @@ def get_tariff_keyboard(lang):
         if data.get("category") == "main":
             name = data['name_ru'] if lang == 'ru' else data['name_en']
             buttons.append([InlineKeyboardButton(text=f"{name} • {data['price_rub']} 🇷🇺RUB", callback_data=f"tariff_{key}")])
-    # Добавляем кнопку "Паки"
     buttons.append([InlineKeyboardButton(text="👈🏻 Паки", callback_data="show_paki")])
     return InlineKeyboardMarkup(inline_keyboard=buttons)
 
@@ -299,16 +300,16 @@ def get_payment_method_keyboard(tariff_key, discount_percent=0, lang="ru"):
         btn_stars = LANG[lang]["btn_pay_stars"].format(price=stars_price)
 
     return InlineKeyboardMarkup(inline_keyboard=[
-        [InlineKeyboardButton(text="💳 ОПЛАТИТЬ", callback_data=f"pay_rub_{tariff_key}")],
-        [InlineKeyboardButton(text="🎁 ОПЛАТИТЬ ДЛЯ ДРУГА", callback_data=f"pay_stars_{tariff_key}")],
-        [InlineKeyboardButton(text="🏷️ ВВЕСТИ ПРОМОКОД..", callback_data=f"enter_promo_{tariff_key}")],
+        [InlineKeyboardButton(text=btn_rub, callback_data=f"pay_rub_{tariff_key}")],
+        [InlineKeyboardButton(text=btn_stars, callback_data=f"pay_stars_{tariff_key}")],
         [InlineKeyboardButton(text=LANG[lang]["btn_back"], callback_data="back_to_prices")]
     ])
 
 def get_payment_action_keyboard(payment_url, tariff_key, lang="ru"):
     return InlineKeyboardMarkup(inline_keyboard=[
         [InlineKeyboardButton(text=LANG[lang]["btn_goto_pay"], url=payment_url)],
-        [InlineKeyboardButton(text="🚫 ОТМЕНА", callback_data="back_to_prices")]
+        [InlineKeyboardButton(text=LANG[lang]["btn_new_link"], callback_data=f"refresh_link_{tariff_key}")],
+        [InlineKeyboardButton(text=LANG[lang]["btn_back"], callback_data="back_to_prices")]
     ])
 
 def get_back_to_prices_keyboard(lang="ru"):
@@ -427,10 +428,14 @@ async def show_tariff_details(callback: CallbackQuery, state: FSMContext):
         price_line = f"💰 Цена: <s>{tariff['price_rub']} 🇷🇺RUB</s> → {new_price} 🇷🇺RUB <b>(-{discount}%)</b>"
     else:
         price_line = f"💰 Цена: {tariff['price_rub']} 🇷🇺RUB"
+        
+    text = f"📋 <b>{name}</b>\n\n{price_line}\nСрок доступа: {duration}\n\n{desc}"
     
-    text = f"📋 <b>{name}</b>\n\n{price_line}\nСрок действия: {duration}\n\n{desc}"
-    
-    await callback.message.edit_text(text, reply_markup=get_payment_method_keyboard(tariff_key, discount, lang))
+    await callback.message.edit_text(text, reply_markup=InlineKeyboardMarkup(inline_keyboard=[
+        [InlineKeyboardButton(text=LANG[lang]["btn_promo"], callback_data=f"enter_promo_{tariff_key}")],
+        [InlineKeyboardButton(text=LANG[lang]["btn_pay"], callback_data=f"choose_pay_{tariff_key}")],
+        [InlineKeyboardButton(text=LANG[lang]["btn_back"], callback_data="back_to_prices")]
+    ]))
 
 @dp.callback_query(F.data.startswith("enter_promo_"))
 async def enter_promo(callback: CallbackQuery, state: FSMContext):
@@ -472,8 +477,12 @@ async def cancel_promo(callback: CallbackQuery, state: FSMContext):
     else:
         price_line = f"💰 Цена: {tariff['price_rub']} RUB"
 
-    text = f"📋 <b>{name}</b>\n\n{price_line}\nСрок действия: {duration}\n\n{desc}"
-    await callback.message.answer(text, reply_markup=get_payment_method_keyboard(tariff_key, discount, lang))
+    text = f"📋 <b>{name}</b>\n\n{price_line}\nСрок доступа: {duration}\n\n{desc}"
+    await callback.message.answer(text, reply_markup=InlineKeyboardMarkup(inline_keyboard=[
+        [InlineKeyboardButton(text=LANG[lang]["btn_promo"], callback_data=f"enter_promo_{tariff_key}")],
+        [InlineKeyboardButton(text=LANG[lang]["btn_pay"], callback_data=f"choose_pay_{tariff_key}")],
+        [InlineKeyboardButton(text=LANG[lang]["btn_back"], callback_data="back_to_prices")]
+    ]))
 
 @dp.message(PromoStates.waiting_for_promo)
 async def process_promo(message: Message, state: FSMContext):
@@ -501,6 +510,32 @@ async def process_promo(message: Message, state: FSMContext):
     else:
         await message.answer(LANG[lang]["promo_fail"])
 
+@dp.callback_query(F.data.startswith("choose_pay_"))
+async def choose_payment(callback: CallbackQuery, state: FSMContext):
+    tariff_key = callback.data.replace("choose_pay_", "")
+    
+    if tariff_key not in TARIFFS:
+        await callback.answer("❌ Тариф не найден", show_alert=True)
+        return
+        
+    lang = await get_lang(state)
+    data = await state.get_data()
+    discount = data.get("discount", 0)
+    
+    tariff = TARIFFS[tariff_key]
+    name = tariff['name_ru'] if lang == "ru" else tariff['name_en']
+    duration = tariff['duration_ru'] if lang == "ru" else tariff['duration_en']
+    
+    if discount > 0:
+        show_rub = int(tariff['price_rub'] * (1 - discount / 100))
+        price_text = f"<s>{tariff['price_rub']} RUB</s> → {show_rub} RUB (-{discount}%)"
+    else:
+        show_rub = tariff['price_rub']
+        price_text = f"{show_rub} RUB"
+        
+    text = LANG[lang]["choose_pay"].format(name=name, duration=duration, price_text=price_text, project=PROJECT_NAME)
+    await callback.message.edit_text(text, reply_markup=get_payment_method_keyboard(tariff_key, discount, lang))
+
 @dp.callback_query(F.data.startswith("pay_rub_"))
 async def process_rub_payment(callback: CallbackQuery, state: FSMContext):
     tariff_key = callback.data.replace("pay_rub_", "")
@@ -524,11 +559,11 @@ async def process_rub_payment(callback: CallbackQuery, state: FSMContext):
         duration = tariff['duration_ru'] if lang == "ru" else tariff['duration_en']
         
         if discount > 0:
-            price_line = f"💰 Цена: <s>{tariff['price_rub']} 🇷🇺RUB</s> → {final_price} 🇷🇺RUB (-{discount}%)\n"
+            price_line = f"💰 Цена: <s>{tariff['price_rub']} RUB</s> → {final_price} RUB (-{discount}%)\n"
         else:
-            price_line = f"💰 Цена: {final_price} 🇷🇺RUB\n"
+            price_line = f"💰 Цена: {final_price} RUB\n"
             
-        text = f"📋 <b>{name}</b>\nСрок доступа: {duration}\n{price_line}💳 Способ оплаты: Криптовалюта\n\n💰 Итоговая стоимость: {final_price} 🇷🇺RUB\n\n✅ Счёт на оплату сформирован. Доступы к закрытым сообществам будут открыты, как только вы оплатите его."
+        text = LANG[lang]["pay_rub"].format(name=name, duration=duration, price_line=price_line, final=final_price, project=PROJECT_NAME)
         await callback.message.edit_text(text, reply_markup=get_payment_action_keyboard(payment_url, tariff_key, lang))
     else:
         await callback.answer("❌ Ошибка создания платежа. Попробуйте позже или выберите другой способ оплаты.", show_alert=True)
@@ -549,58 +584,47 @@ async def process_stars_payment(callback: CallbackQuery, state: FSMContext):
     duration = tariff['duration_ru'] if lang == "ru" else tariff['duration_en']
     
     final_price = int(tariff['price_stars'] * (1 - discount / 100))
+    demo_stars_url = f"https://t.me/TweetlyStarsBot?start=demo_stars_{tariff_key}"
     
-    text = f"""📋 <b>{name}</b>
-Срок доступа: {duration}
-💰 Цена: {final_price} 🇷🇺RUB
-
-💳 Способ оплаты: Перевод на телефон
-
-К оплате: {final_price} 🇷🇺RUB
-Ваш ID: {callback.from_user.id}
-
-Реквизиты для оплаты:
-
-На телефон сим-карты ( мобильная связь ) билайн: +79640531089
-
-Не на банк!
-
-❗️Проверка ботом может занимать какое-то время ( ручная проверка )
-❕Если вы оплатили нажмите обязательно кнопку «я оплатил»
-
-❕Если вы ждете больше 12 часов напишите администратору
-
-Возможно оплата звездами телеграм, писать админу"""
+    if discount > 0:
+        price_line = f"💰 Цена: <s>{tariff['price_stars']} STARS</s> → {final_price} STARS (-{discount}%)\n"
+    else:
+        price_line = f"💰 Цена: {final_price} STARS\n"
+        
+    support = SUPPORT_CONTACT_RU if lang == "ru" else SUPPORT_CONTACT_EN
+    text = LANG[lang]["pay_stars"].format(name=name, duration=duration, price_line=price_line, final=final_price, project=PROJECT_NAME, support=support)
     
     kb = InlineKeyboardMarkup(inline_keyboard=[
-        [InlineKeyboardButton(text="⌛️ Я ОПЛАТИЛ", callback_data=f"confirm_pay_{tariff_key}")],
-        [InlineKeyboardButton(text=LANG[lang]["btn_back"], callback_data="back_to_prices")]
+        [InlineKeyboardButton(text=LANG[lang]["btn_stars_go"], url=demo_stars_url)],
+        [InlineKeyboardButton(text=LANG[lang]["btn_back"], callback_data=f"choose_pay_{tariff_key}")]
     ])
     await callback.message.edit_text(text, reply_markup=kb)
 
-@dp.callback_query(F.data.startswith("confirm_pay_"))
-async def confirm_payment(callback: CallbackQuery, state: FSMContext):
-    tariff_key = callback.data.replace("confirm_pay_", "")
+@dp.callback_query(F.data.startswith("refresh_link_"))
+async def refresh_link(callback: CallbackQuery, state: FSMContext):
+    tariff_key = callback.data.replace("refresh_link_", "")
     
     if tariff_key not in TARIFFS:
         await callback.answer("❌ Тариф не найден", show_alert=True)
         return
         
-    lang = await get_lang(state)
-    
-    text = f"""💁🏻‍♂️ Оплатили?
+    tariff = TARIFFS[tariff_key]
+    user_id = callback.from_user.id
+    final_price = tariff['price_rub']
 
-👌🏻 Обязательно отправьте сюда картинкой (не документом!) квитанцию платежа: скриншот или фото. Иначе бот не узнает что вы оплатили
+    payment_url = await create_rollypay_payment(final_price, user_id, tariff_key, tariff['name_ru'])
 
-На квитанции должны быть четко видны: дата, время и сумма платежа. Проверка может занимать до дня.
-Никто ваши чеки не увидит, телеграм не хранит их.
-______________________
-За спам вы можете быть заблокированы!"""
-    
-    kb = InlineKeyboardMarkup(inline_keyboard=[
-        [InlineKeyboardButton(text="🚫 ОТМЕНА", callback_data="back_to_prices")]
-    ])
-    await callback.message.edit_text(text, reply_markup=kb)
+    if payment_url:
+        await callback.message.edit_reply_markup(
+            reply_markup=InlineKeyboardMarkup(inline_keyboard=[
+                [InlineKeyboardButton(text="💳 Перейти к оплате", url=payment_url)],
+                [InlineKeyboardButton(text="🔗 Получить новую ссылку", callback_data=f"refresh_link_{tariff_key}")],
+                [InlineKeyboardButton(text="◀️ Назад", callback_data="back_to_prices")]
+            ])
+        )
+        await callback.answer("✅ Новая ссылка сгенерирована!", show_alert=True)
+    else:
+        await callback.answer("❌ Ошибка создания новой ссылки. Попробуйте позже.", show_alert=True)
 
 # --- ВЕБ-СЕРВЕР ДЛЯ UPTIMEROBOT ---
 async def handle_uptime_check(request):
@@ -623,7 +647,7 @@ async def start_web_server():
 async def main():
     logging.basicConfig(level=logging.INFO)
     
-    # Запускаем веб-сервер
+    # Запускаем веб-сервер для Render
     runner = await start_web_server()
     
     # Проверяем вебхук
