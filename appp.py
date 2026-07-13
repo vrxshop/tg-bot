@@ -34,6 +34,25 @@ DOCS_EN = {
     "policy": "https://telegra.ph/Politika-konfidicialnosti-07-01"
 }
 
+# ==================================================
+# ⭐ ССЫЛКИ ДЛЯ КАЖДОГО ТАРИФА (МЕНЯЙ ЗДЕСЬ!) ⭐
+# ==================================================
+TARIFF_LINKS = {
+    "1": "https://t.me/+ваша_ссылка_для_слива_знаменитостей",   # Слив знаменитостей
+    "2": "https://t.me/+ваша_ссылка_для_сливов_шкур",          # Сливы шкур
+    "3": "https://t.me/+ваша_ссылка_для_mini_det",             # Mini Детск. До 12
+    "4": "https://t.me/+ваша_ссылка_для_шкодниц",              # ШкоДнищь
+    "5": "https://t.me/+ваша_ссылка_для_premium_det",          # Premium Детск. До 12
+    "6": "https://t.me/+ваша_ссылка_для_зоо",                  # Канал Зоо
+    "7": "https://t.me/+ваша_ссылка_для_геев",                 # Геи
+    "8": "https://t.me/+ваша_ссылка_для_закладчиц",            # Закладчицы
+    "9": "https://t.me/+ваша_ссылка_для_все_включено",         # Всё включено 2026
+    "10": "https://t.me/velvet_vpn_bot?start=AW3BJ7lz",        # Vpn 7 дней
+    "11": "https://t.me/+ваша_ссылка_для_обновления_ссылок",   # Пак - Обновление ссылок
+    "test": "https://t.me/+ваша_ссылка_для_тестового_тарифа",  # Тестовый тариф
+}
+# ==================================================
+
 # --- ТЕКСТЫ ---
 LANG = {
     "ru": {
@@ -63,7 +82,9 @@ LANG = {
         "btn_to_prices": "✅ КУПИТЬ ПОДПИСКУ",
         "btn_cancel": "🚫 ОТМЕНА",
         "btn_stars_go": "⭐ Stars со скидкой до 42%",
-        "btn_lang": "🇷🇺 Язык"
+        "btn_lang": "🇷🇺 Язык",
+        "payment_success": "✅ <b>Оплата прошла!</b>\n\n🔗 <b>Ваша ссылка доступа:</b>\n{link}\n\nСпасибо за покупку! ❤️",
+        "payment_success_test": "*Оплата прошла!* 🎉\n\nЭто тестовый тариф. Спасибо за проверку! 🙌"
     },
     "en": {
         "start_promo": "🎉 <b>Promo code {code} activated! {discount}% discount!</b>",
@@ -92,11 +113,13 @@ LANG = {
         "btn_to_prices": "✅ BUY SUBSCRIPTION",
         "btn_cancel": "🚫 CANCEL",
         "btn_stars_go": "⭐ Stars up to 42% off",
-        "btn_lang": "🇬🇧 Language"
+        "btn_lang": "🇬🇧 Language",
+        "payment_success": "✅ <b>Payment successful!</b>\n\n🔗 <b>Your access link:</b>\n{link}\n\nThank you for your purchase! ❤️",
+        "payment_success_test": "*Payment successful!* 🎉\n\nThis is a test tariff. Thanks for testing! 🙌"
     }
 }
 
-# --- ТАРИФЫ (ПРОСТЫЕ КЛЮЧИ) ---
+# --- ТАРИФЫ ---
 TARIFFS = {
     "1": {
         "name_ru": "🎁 Слив знаменитостей 🌟",
@@ -207,6 +230,17 @@ TARIFFS = {
         "duration_en": "21 days",
         "category": "paki",
         "desc_ru": "Cливaeм ccлыки дpyгиx кaнaлoв, peкoмeндyeм пoкyпaть пocлe пpocмoтpa дpyгиx тapифoв\n\nЕдинственный пак который не входит во всё включено"
+    },
+    # --- ТЕСТОВЫЙ ТАРИФ ---
+    "test": {
+        "name_ru": "🧪 ТЕСТОВЫЙ тариф (2 руб)",
+        "name_en": "🧪 TEST tariff (2 rub)",
+        "price_rub": 2,
+        "price_stars": 2,
+        "duration_ru": "Тестовый",
+        "duration_en": "Test",
+        "category": "main",
+        "desc_ru": "🧪 Это тестовый тариф для проверки оплаты.\n\nПосле оплаты вы получите ссылку."
     }
 }
 
@@ -235,7 +269,7 @@ async def create_rollypay_payment(amount: int, user_id: int, tariff_key: str, ta
         "amount": str(amount),
         "payment_currency": "RUB",
         "order_id": f"order_{user_id}_{tariff_key}_{int(asyncio.get_event_loop().time())}",
-        "description": f"Оплата доступа #{user_id}_{tariff_key}", 
+        "description": f"Оплата доступа #{user_id}_{tariff_key}",
         "callback_url": ROLLYPAY_CALLBACK_URL,
         "success_url": "https://t.me/blogprivatbot",
         "fail_url": "https://t.me/blogprivatbot",
@@ -281,6 +315,23 @@ async def full_reset():
     except Exception as e:
         print(f"   ❌ Ошибка при сбросе: {e}")
         return False
+
+# --- ФУНКЦИЯ ДЛЯ ВЫДАЧИ ССЫЛКИ ---
+async def send_access_link(message: Message, tariff_key: str, lang: str):
+    """Отправляет ссылку доступа для тарифа"""
+    link = TARIFF_LINKS.get(tariff_key)
+    
+    if tariff_key == "test":
+        # Для тестового тарифа - специальное сообщение
+        text = LANG[lang]["payment_success_test"]
+    elif link:
+        # Для обычных тарифов - ссылка
+        text = LANG[lang]["payment_success"].format(link=link)
+    else:
+        # Если ссылка не найдена
+        text = "❌ Ссылка для этого тарифа пока не настроена. Обратитесь к администратору."
+    
+    await message.answer(text, disable_web_page_preview=False)
 
 # --- КЛАВИАТУРЫ ---
 def get_main_keyboard(lang):
@@ -361,6 +412,7 @@ async def cmd_start(message: Message, state: FSMContext):
     lang = await get_lang(state)
     user_name = message.from_user.first_name
     
+    # ИСПРАВЛЕННЫЙ ТЕКСТ ПРИВЕТСТВИЯ
     text = f"""👋 Привет, {user_name}!
 Ты попал в наш бот✅
 
@@ -368,7 +420,7 @@ async def cmd_start(message: Message, state: FSMContext):
 
 Если бот не доступен пиши мне
 
-Тех.поддержка: @vmolins1"""
+Тех.поддержка: @Nastia_sup"""
     
     await message.answer(text, disable_web_page_preview=True)
     await message.answer(MAIN_MENU_TEXT, reply_markup=get_tariff_keyboard(lang))
@@ -425,10 +477,8 @@ async def show_paki(callback: CallbackQuery, state: FSMContext):
 # --- ГЛАВНЫЙ ОБРАБОТЧИК ТАРИФОВ ---
 @dp.callback_query(F.data.startswith("tariff_"))
 async def show_tariff_details(callback: CallbackQuery, state: FSMContext):
-    # Получаем ключ тарифа (число после tariff_)
     tariff_key = callback.data.replace("tariff_", "")
     
-    # Проверяем существует ли такой тариф
     if tariff_key not in TARIFFS:
         await callback.answer("❌ Тариф не найден", show_alert=True)
         return
@@ -571,6 +621,8 @@ async def process_rub_payment(callback: CallbackQuery, state: FSMContext):
     final_price = int(tariff['price_rub'] * (1 - discount / 100))
     user_id = callback.from_user.id
     
+    await state.update_data(pending_tariff=tariff_key)
+    
     payment_url = await create_rollypay_payment(final_price, user_id, tariff_key, tariff['name_ru'])
     
     if payment_url:
@@ -586,6 +638,17 @@ async def process_rub_payment(callback: CallbackQuery, state: FSMContext):
         await callback.message.edit_text(text, reply_markup=get_payment_action_keyboard(payment_url, tariff_key, lang))
     else:
         await callback.answer("❌ Ошибка создания платежа. Попробуйте позже или выберите другой способ оплаты.", show_alert=True)
+
+# --- ОБРАБОТЧИК УСПЕШНОЙ ОПЛАТЫ (ВЫДАЁТ ССЫЛКУ) ---
+@dp.callback_query(F.data.startswith("payment_success_"))
+async def payment_success(callback: CallbackQuery, state: FSMContext):
+    tariff_key = callback.data.replace("payment_success_", "")
+    lang = await get_lang(state)
+    
+    await callback.message.delete()
+    
+    await send_access_link(callback.message, tariff_key, lang)
+    await callback.answer("✅ Оплата успешно завершена!")
 
 @dp.callback_query(F.data.startswith("pay_stars_"))
 async def process_stars_payment(callback: CallbackQuery, state: FSMContext):
@@ -666,28 +729,19 @@ async def start_web_server():
 async def main():
     logging.basicConfig(level=logging.INFO)
     
-    # === ПРИНУДИТЕЛЬНЫЙ СБРОС ===
+    print("🚀 ЗАПУСК БОТА")
+    print("=" * 40)
+    
     try:
-        # Удаляем вебхук с принудительным сбросом всех обновлений
         await bot.delete_webhook(drop_pending_updates=True)
         print("✅ Вебхук удалён!")
-        
-        # Закрываем старую сессию
         await bot.session.close()
         print("✅ Старая сессия закрыта!")
-        
-        # Создаём новую сессию
         new_session = AiohttpSession()
         bot.session = new_session
         print("✅ Новая сессия создана!")
     except Exception as e:
         print(f"❌ Ошибка сброса: {e}")
-    # ============================
-    
-    print("🚀 ЗАПУСК БОТА")
-    print("=" * 40)
-    
-    await full_reset()
     
     print("=" * 40)
     
@@ -697,6 +751,7 @@ async def main():
     print("=" * 40)
     print("🤖 Бот полностью готов!")
     print("📱 Команды: /start, /language, /reset")
+    print("🧪 Тестовый тариф: 2 рубля")
     print("=" * 40)
     
     await dp.start_polling(bot)
