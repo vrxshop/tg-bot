@@ -537,9 +537,7 @@ def get_back_to_prices_keyboard(lang="ru"):
 async def set_bot_commands():
     commands = [
         BotCommand(command="start", description="Запустить бота / Start bot"),
-        BotCommand(command="language", description="Сменить язык / Change language"),
-        BotCommand(command="reset", description="Сбросить бота (админ)"),
-        BotCommand(command="test67", description="Тестовый тариф / Test tariff")
+        BotCommand(command="language", description="Сменить язык / Change language")
     ]
     await bot.set_my_commands(commands)
     print("✅ Команды установлены в меню!")
