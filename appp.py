@@ -22,7 +22,7 @@ ROLLYPAY_API_KEY = "z39_r_COJdiB7PWeddOYvzT2rx4cjIbS1m4JJcgBTi0"
 ROLLYPAY_CALLBACK_URL = "https://t-bot-18jz.onrender.com/webhook"
 
 # --- КОНФИГУРАЦИЯ БОТА ---
-BOT_TOKEN = "8843954886:AAEUixqg1qi6CseS2OYFASC0OEBytrvuxI8"
+BOT_TOKEN = "8843954886:AAGdcbtBmEEIIA4-g9B_K85Ez-W20_oWgQw"
 PROJECT_NAME = "VIP"
 SUPPORT_CONTACT_RU = "https://t.me/Nastia_sup"
 SUPPORT_CONTACT_EN = "https://t.me/Nastia_sup"
@@ -38,21 +38,21 @@ DOCS_EN = {
 }
 
 # ==================================================
-# ⭐ ID КАНАЛОВ ДЛЯ КАЖДОГО ТАРИФА (МЕНЯЙ ЗДЕСЬ!) ⭐
+# ⭐ ID КАНАЛОВ ДЛЯ КАЖДОГО ТАРИФА ⭐
 # ==================================================
 CHANNEL_IDS = {
-    "1": "-1001234567890",   # Слив знаменитостей (ЗАМЕНИ НА РЕАЛЬНЫЙ ID)
-    "2": "-1001234567891",   # Сливы шкур
-    "3": "-1001234567892",   # Mini Детск. До 12
-    "4": "-1001234567893",   # ШкоДнищь
-    "5": "-1001234567894",   # Premium Детск. До 12
-    "6": "-1001234567895",   # Канал Зоо
+    "1": "-1004413060412",   # Слив знаменитостей
+    "2": "-1004478645537",   # Сливы шкур
+    "3": "-1004325704012",   # Mini Детск. До 12
+    "4": "-1004362010819",   # ШкоДнищь
+    "5": "-1004303957771",   # Premium Детск. До 12
+    "6": "-1004429510738",   # Канал Зоо
     "7": "-1003748125426",   # Геи
-    "8": "-1001234567897",   # Закладчицы
-    "9": "-1001234567898",   # Всё включено 2026
+    "8": "-1004415846130",   # Закладчицы
+    "9": "-1004331987176",   # Всё включено 2026
     "10": "-1001234567899",  # Vpn 7 дней
     "11": "-1003862973415",  # Пак - Обновление ссылок
-    "test": "-1003875225035", # Тестовый тариф
+    "test": "-1003875225035", # Тестовый тариф (только по команде /test67)
 }
 # ==================================================
 
@@ -164,8 +164,8 @@ LANG = {
         "btn_cancel": "🚫 ОТМЕНА",
         "btn_stars_go": "⭐ Stars со скидкой до 42%",
         "btn_lang": "🇷🇺 Язык",
-        "payment_success": "✅ <b>Оплата прошла!</b>\n\n🔗 <b>Ваша одноразовая ссылка доступа:</b>\n{link}\n\n⚠️ <b>Внимание!</b> Ссылка действительна только 1 раз!\n\nСпасибо за покупку! ❤️",
-        "payment_success_test": "✅ <b>Доступ открыт!</b>\n\n🔗 <b>Ваша одноразовая ссылка доступа:</b>\n{link}\n\n⚠️ <b>Внимание!</b> Ссылка действительна только 1 раз!\n\nСпасибо за использование бота! ❤️",
+        "payment_success": "✅ <b>Оплата прошла!</b>\n\n🔗 <b>Ваша ссылка доступа (действует 30 секунд):</b>\n{link}\n\n⚠️ <b>Внимание!</b> Ссылка действительна только 30 секунд!\n\nСпасибо за покупку! ❤️",
+        "payment_success_test": "✅ <b>Доступ открыт!</b>\n\n🔗 <b>Ваша ссылка доступа (действует 30 секунд):</b>\n{link}\n\n⚠️ <b>Внимание!</b> Ссылка действительна только 30 секунд!\n\nСпасибо за использование бота! ❤️",
         "subs_list_item": "• {name} (оплачен ✅)",
     },
     "en": {
@@ -198,13 +198,13 @@ LANG = {
         "btn_cancel": "🚫 CANCEL",
         "btn_stars_go": "⭐ Stars up to 42% off",
         "btn_lang": "🇬🇧 Language",
-        "payment_success": "✅ <b>Payment successful!</b>\n\n🔗 <b>Your one-time access link:</b>\n{link}\n\n⚠️ <b>Warning!</b> The link is valid only 1 time!\n\nThank you for your purchase! ❤️",
-        "payment_success_test": "✅ <b>Access granted!</b>\n\n🔗 <b>Your one-time access link:</b>\n{link}\n\n⚠️ <b>Warning!</b> The link is valid only 1 time!\n\nThank you for using the bot! ❤️",
+        "payment_success": "✅ <b>Payment successful!</b>\n\n🔗 <b>Your access link (valid 30 seconds):</b>\n{link}\n\n⚠️ <b>Warning!</b> The link is valid only 30 seconds!\n\nThank you for your purchase! ❤️",
+        "payment_success_test": "✅ <b>Access granted!</b>\n\n🔗 <b>Your access link (valid 30 seconds):</b>\n{link}\n\n⚠️ <b>Warning!</b> The link is valid only 30 seconds!\n\nThank you for using the bot! ❤️",
         "subs_list_item": "• {name} (paid ✅)",
     }
 }
 
-# --- ТАРИФЫ ---
+# --- ТАРИФЫ (без тестового в общем меню) ---
 TARIFFS = {
     "1": {
         "name_ru": "🎁 Слив знаменитостей 🌟",
@@ -304,7 +304,7 @@ TARIFFS = {
         "duration_ru": "1 день",
         "duration_en": "1 day",
         "category": "main",
-        "desc_ru": "Не покупать, читайте описание.\n\n✅ Хороший VPN для обхода белых списков.\n\nПереходим по ссылке:\nhttps://t.me/velvet_vpn_bot?start=AW3BJ7lz\n\nВам дают 2 дня бесплатного доступа, а также вводим ещё 2 секретных промокода на 7 дней:\n\nWELCOME_BACK\nJUSTTRY"
+        "desc_ru": "Не покупать, читайте описание.\n\n✅ Хороший VPN для обхода белых списков.\n\nПереходим по ссылке:\nhttps://telegram.me/velvet_vpn_bot?start=Vsu14DTt\n\nВам дают 2 дня бесплатного доступа, а также вводим ещё 2 секретных промокода на 7 дней:\n\nWELCOME_BACK\nJUSTTRY"
     },
     "11": {
         "name_ru": "✅Пак - Обновление ссылок",
@@ -315,18 +315,18 @@ TARIFFS = {
         "duration_en": "21 days",
         "category": "paki",
         "desc_ru": "Cливaeм ccлыки дpyгиx кaнaлoв, peкoмeндyeм пoкyпaть пocлe пpocмoтpa дpyгиx тapифoв\n\nЕдинственный пак который не входит во всё включено"
-    },
-    # --- ТЕСТОВЫЙ ТАРИФ (БЕСПЛАТНЫЙ) ---
-    "test": {
-        "name_ru": "🧪 ТЕСТОВЫЙ тариф (Бесплатно)",
-        "name_en": "🧪 TEST tariff (Free)",
-        "price_rub": 0,
-        "price_stars": 0,
-        "duration_ru": "Тестовый",
-        "duration_en": "Test",
-        "category": "main",
-        "desc_ru": "🧪 Это тестовый тариф. Он полностью БЕСПЛАТНЫЙ!\n\nПросто выберите его и получите ссылку для тестирования."
     }
+}
+
+# --- ТЕСТОВЫЙ ТАРИФ (отдельно, только по команде) ---
+TEST_TARIFF = {
+    "name_ru": "🧪 ТЕСТОВЫЙ тариф (Бесплатно)",
+    "name_en": "🧪 TEST tariff (Free)",
+    "price_rub": 0,
+    "price_stars": 0,
+    "duration_ru": "Тестовый",
+    "duration_en": "Test",
+    "desc_ru": "🧪 Это тестовый тариф. Он полностью БЕСПЛАТНЫЙ!\n\nПросто выберите его и получите ссылку для тестирования."
 }
 
 PROMO_CODES = {
@@ -404,7 +404,7 @@ async def full_reset():
         print(f"   ❌ Ошибка при сбросе: {e}")
         return False
 
-# --- ФУНКЦИЯ ДЛЯ СОЗДАНИЯ ОДНОРАЗОВОЙ ССЫЛКИ ---
+# --- ФУНКЦИЯ ДЛЯ СОЗДАНИЯ ССЫЛКИ (30 СЕКУНД) ---
 async def create_one_time_link(chat_id: str) -> str:
     """Создаёт ссылку, которая живёт 30 секунд"""
     try:
@@ -423,7 +423,7 @@ async def create_one_time_link(chat_id: str) -> str:
 
 # --- ФУНКЦИЯ ДЛЯ СОХРАНЕНИЯ ФАКТА ОПЛАТЫ И ВЫДАЧИ ССЫЛКИ ---
 async def save_payment_and_send_link(message: Message, tariff_key: str, lang: str, user_id: int):
-    """Сохраняет факт оплаты в БД, создаёт одноразовую ссылку и отправляет"""
+    """Сохраняет факт оплаты в БД, создаёт ссылку и отправляет"""
     
     if tariff_key not in CHANNEL_IDS:
         await message.answer("❌ Ошибка: канал для этого тарифа не настроен. Обратитесь к администратору.")
@@ -439,8 +439,12 @@ async def save_payment_and_send_link(message: Message, tariff_key: str, lang: st
     # Сохраняем в БД
     add_paid_tariff(user_id, tariff_key)
     
-    tariff = TARIFFS[tariff_key]
-    name = tariff['name_ru'] if lang == "ru" else tariff['name_en']
+    # Определяем название тарифа
+    if tariff_key == "test":
+        name = TEST_TARIFF['name_ru'] if lang == "ru" else TEST_TARIFF['name_en']
+    else:
+        tariff = TARIFFS[tariff_key]
+        name = tariff['name_ru'] if lang == "ru" else tariff['name_en']
     
     if tariff_key == "test":
         text = LANG[lang]["payment_success_test"].format(link=link)
@@ -456,7 +460,7 @@ def get_main_keyboard(lang):
     ], resize_keyboard=True)
 
 def get_tariff_keyboard(lang):
-    """Главное меню тарифов - ТОЛЬКО НАЗВАНИЯ, БЕЗ ЦЕН"""
+    """Главное меню тарифов - ТОЛЬКО НАЗВАНИЯ, БЕЗ ЦЕН (без тестового)"""
     buttons = []
     for key, data in TARIFFS.items():
         if data.get("category") == "main":
@@ -475,12 +479,19 @@ def get_paki_keyboard(lang):
     buttons.append([InlineKeyboardButton(text="👈 НАЗАД", callback_data="back_to_prices")])
     return InlineKeyboardMarkup(inline_keyboard=buttons)
 
+def get_test_tariff_keyboard(lang):
+    """Клавиатура для тестового тарифа"""
+    buttons = [
+        [InlineKeyboardButton(text="💳 ОПЛАТИТЬ", callback_data="pay_test")],
+        [InlineKeyboardButton(text="👈 НАЗАД", callback_data="back_to_prices")]
+    ]
+    return InlineKeyboardMarkup(inline_keyboard=buttons)
+
 def get_tariff_details_keyboard(tariff_key, lang, user_id):
     """Клавиатура для тарифа - если оплачен, кнопки оплаты нет"""
     buttons = []
     buttons.append([InlineKeyboardButton(text=LANG[lang]["btn_promo"], callback_data=f"enter_promo_{tariff_key}")])
     
-    # Проверка в БД
     is_paid = is_tariff_paid(user_id, tariff_key)
     
     if not is_paid:
@@ -527,7 +538,8 @@ async def set_bot_commands():
     commands = [
         BotCommand(command="start", description="Запустить бота / Start bot"),
         BotCommand(command="language", description="Сменить язык / Change language"),
-        BotCommand(command="reset", description="Сбросить бота (админ)")
+        BotCommand(command="reset", description="Сбросить бота (админ)"),
+        BotCommand(command="test67", description="Тестовый тариф / Test tariff")
     ]
     await bot.set_my_commands(commands)
     print("✅ Команды установлены в меню!")
@@ -556,6 +568,56 @@ async def cmd_start(message: Message, state: FSMContext):
     
     await message.answer(text, disable_web_page_preview=True)
     await message.answer(MAIN_MENU_TEXT, reply_markup=get_tariff_keyboard(lang))
+
+@dp.message(Command("test67"))
+async def cmd_test67(message: Message, state: FSMContext):
+    """Команда для доступа к тестовому тарифу"""
+    lang = await get_lang(state)
+    user_id = message.from_user.id
+    
+    # Проверяем, оплачивал ли уже пользователь тестовый тариф
+    is_paid = is_tariff_paid(user_id, "test")
+    
+    if is_paid:
+        # Если уже оплачено - показываем сообщение
+        text = f"""📋 <b>{TEST_TARIFF['name_ru'] if lang == 'ru' else TEST_TARIFF['name_en']}</b>
+
+💰 Цена: БЕСПЛАТНО 🎉
+Срок доступа: {TEST_TARIFF['duration_ru'] if lang == 'ru' else TEST_TARIFF['duration_en']}
+
+{TEST_TARIFF['desc_ru'] if lang == 'ru' else TEST_TARIFF['desc_en']}
+
+✅ <b>ТАРИФ ОПЛАЧЕН</b>
+
+🔑 Для получения ссылки напишите в поддержку @Nastia_sup"""
+        await message.answer(text)
+        return
+    
+    # Если не оплачено - показываем тариф с кнопкой оплаты
+    text = f"""📋 <b>{TEST_TARIFF['name_ru'] if lang == 'ru' else TEST_TARIFF['name_en']}</b>
+
+💰 Цена: БЕСПЛАТНО 🎉
+Срок доступа: {TEST_TARIFF['duration_ru'] if lang == 'ru' else TEST_TARIFF['duration_en']}
+
+{TEST_TARIFF['desc_ru'] if lang == 'ru' else TEST_TARIFF['desc_en']}"""
+    
+    await message.answer(text, reply_markup=get_test_tariff_keyboard(lang))
+
+@dp.callback_query(F.data == "pay_test")
+async def pay_test_tariff(callback: CallbackQuery, state: FSMContext):
+    """Обработчик оплаты тестового тарифа"""
+    lang = await get_lang(state)
+    user_id = callback.from_user.id
+    
+    # Проверяем, не оплачивал ли уже
+    if is_tariff_paid(user_id, "test"):
+        await callback.answer("❌ Вы уже активировали тестовый тариф!", show_alert=True)
+        return
+    
+    # Выдаём ссылку
+    await callback.message.delete()
+    await save_payment_and_send_link(callback.message, "test", lang, user_id)
+    await callback.answer("✅ Доступ открыт!")
 
 @dp.message(Command("reset"))
 async def cmd_reset(message: Message):
@@ -593,13 +655,15 @@ async def show_subscriptions(message: Message, state: FSMContext):
     lang = await get_lang(state)
     user_id = message.from_user.id
     
-    # Получаем из БД
     paid_list = get_paid_tariffs(user_id)
     
     if paid_list:
         subs_list = []
         for tariff_key in paid_list:
-            if tariff_key in TARIFFS:
+            if tariff_key == "test":
+                name = TEST_TARIFF['name_ru'] if lang == "ru" else TEST_TARIFF['name_en']
+                subs_list.append(LANG[lang]["subs_list_item"].format(name=name))
+            elif tariff_key in TARIFFS:
                 name = TARIFFS[tariff_key]['name_ru'] if lang == "ru" else TARIFFS[tariff_key]['name_en']
                 subs_list.append(LANG[lang]["subs_list_item"].format(name=name))
         
@@ -649,7 +713,6 @@ async def show_tariff_details(callback: CallbackQuery, state: FSMContext):
     else:
         price_text = f"{tariff['price_rub']} 🇷🇺RUB"
     
-    # Проверка в БД
     is_paid = is_tariff_paid(user_id, tariff_key)
     
     if is_paid:
@@ -936,7 +999,7 @@ async def start_web_server():
 async def main():
     logging.basicConfig(level=logging.INFO)
     
-    # === ИНИЦИАЛИЗАЦИЯ БАЗЫ ДАННЫХ ===
+    # ИНИЦИАЛИЗАЦИЯ БАЗЫ ДАННЫХ
     init_db()
     print("📁 База данных готова!")
     
@@ -961,9 +1024,10 @@ async def main():
     
     print("=" * 40)
     print("🤖 Бот полностью готов!")
-    print("📱 Команды: /start, /language, /reset")
-    print("🧪 Тестовый тариф: БЕСПЛАТНО!")
+    print("📱 Команды: /start, /language, /reset, /test67")
+    print("🧪 Тестовый тариф: /test67")
     print("💾 Данные сохраняются в SQLite")
+    print("🔗 Ссылки действуют 30 секунд")
     print("=" * 40)
     
     await dp.start_polling(bot)
