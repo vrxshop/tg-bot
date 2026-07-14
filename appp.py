@@ -4,6 +4,7 @@ import os
 import json
 import uuid
 import aiohttp
+import sqlite3
 from aiogram import Bot, Dispatcher, types, F
 from aiogram.types import Message, CallbackQuery, InlineKeyboardMarkup, InlineKeyboardButton, ReplyKeyboardMarkup, KeyboardButton, BotCommand
 from aiogram.filters import CommandStart, Command
@@ -20,7 +21,7 @@ ROLLYPAY_API_KEY = "z39_r_COJdiB7PWeddOYvzT2rx4cjIbS1m4JJcgBTi0"
 ROLLYPAY_CALLBACK_URL = "https://t-bot-18jz.onrender.com/webhook"
 
 # --- КОНФИГУРАЦИЯ БОТА ---
-BOT_TOKEN = "8843954886:AAGdcbtBmEEIIA4-g9B_K85Ez-W20_oWgQw"
+BOT_TOKEN = "8843954886:AAEpfaWLm6sTfmq2T-mShBilX8mInCXs3as"
 PROJECT_NAME = "VIP"
 SUPPORT_CONTACT_RU = "https://t.me/Nastia_sup"
 SUPPORT_CONTACT_EN = "https://t.me/Nastia_sup"
@@ -54,9 +55,81 @@ CHANNEL_IDS = {
 }
 # ==================================================
 
-# --- ХРАНИЛИЩЕ ОПЛАЧЕННЫХ ТАРИФОВ ДЛЯ ПОЛЬЗОВАТЕЛЕЙ ---
-# Хранит только факт оплаты, без ссылок
-user_paid_tariffs = {}
+# ==================================================
+# 📁 РАБОТА С БАЗОЙ ДАННЫХ SQLite
+# ==================================================
+DB_PATH = "users.db"
+
+def init_db():
+    """Создаёт таблицу, если её нет"""
+    conn = sqlite3.connect(DB_PATH)
+    cursor = conn.cursor()
+    
+    cursor.execute('''
+        CREATE TABLE IF NOT EXISTS paid_tariffs (
+            user_id INTEGER,
+            tariff_key TEXT,
+            paid_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            PRIMARY KEY (user_id, tariff_key)
+        )
+    ''')
+    
+    conn.commit()
+    conn.close()
+    logging.info("✅ База данных инициализирована")
+
+def add_paid_tariff(user_id: int, tariff_key: str):
+    """Добавляет запись об оплате тарифа"""
+    try:
+        conn = sqlite3.connect(DB_PATH)
+        cursor = conn.cursor()
+        
+        cursor.execute('''
+            INSERT OR IGNORE INTO paid_tariffs (user_id, tariff_key)
+            VALUES (?, ?)
+        ''', (user_id, tariff_key))
+        
+        conn.commit()
+        conn.close()
+        return True
+    except Exception as e:
+        logging.error(f"Ошибка добавления оплаты: {e}")
+        return False
+
+def get_paid_tariffs(user_id: int):
+    """Возвращает список оплаченных тарифов для пользователя"""
+    try:
+        conn = sqlite3.connect(DB_PATH)
+        cursor = conn.cursor()
+        
+        cursor.execute('''
+            SELECT tariff_key FROM paid_tariffs WHERE user_id = ?
+        ''', (user_id,))
+        
+        result = [row[0] for row in cursor.fetchall()]
+        conn.close()
+        return result
+    except Exception as e:
+        logging.error(f"Ошибка получения оплаченных тарифов: {e}")
+        return []
+
+def is_tariff_paid(user_id: int, tariff_key: str):
+    """Проверяет, оплачен ли конкретный тариф"""
+    try:
+        conn = sqlite3.connect(DB_PATH)
+        cursor = conn.cursor()
+        
+        cursor.execute('''
+            SELECT 1 FROM paid_tariffs WHERE user_id = ? AND tariff_key = ?
+        ''', (user_id, tariff_key))
+        
+        result = cursor.fetchone() is not None
+        conn.close()
+        return result
+    except Exception as e:
+        logging.error(f"Ошибка проверки оплаты: {e}")
+        return False
+# ==================================================
 
 # --- ТЕКСТЫ ---
 LANG = {
@@ -66,8 +139,8 @@ LANG = {
         "prices_menu": "📋 <b>Прайс</b>\n\nВыберите тариф, чтобы узнать подробности и оформить покупку.",
         "subs_menu": "📋 <b>Ваши активные подписки</b>\n\n{list}",
         "no_subs": "⌛️ <b>У Вас нет действующих подписок.</b>\n\nВыберите тариф, чтобы оформить доступ.",
-        "tariff_desc": "📋 <b>{name}</b>\n\n{price_line}\n\n{desc}",
-        "tariff_desc_paid": "📋 <b>{name}</b>\n\n{price_line}\nСрок доступа: {duration}\n\n{desc}\n\n✅ <b>ТАРИФ ОПЛАЧЕН</b>\n\n🔑 Для получения ссылки напишите в поддержку @Nastia_sup",
+        "tariff_desc": "📋 <b>{name}</b>\n\n💰 Цена: {price_text}\nСрок доступа: {duration}\n\n{desc}",
+        "tariff_desc_paid": "📋 <b>{name}</b>\n\n💰 Цена: {price_text}\nСрок доступа: {duration}\n\n{desc}\n\n✅ <b>ТАРИФ ОПЛАЧЕН</b>\n\n🔑 Для получения ссылки напишите в поддержку @Nastia_sup",
         "enter_promo": "🏷️ <b>Введите код промокода</b>\n\nНапишите промокод в чат.",
         "promo_success": "✅ Промокод <b>{code}</b> активирован! Скидка {discount}% 🔥\n\n📋 <b>{name}</b>\n💰 Цена: <s>{old_rub} RUB</s> → {new_rub} RUB <b>(-{discount}%)</b>\n\nВыберите валюту для оплаты.",
         "promo_fail": "❌ Промокод не найден. Попробуйте еще раз (или нажмите ◀️ Отмена).",
@@ -100,8 +173,8 @@ LANG = {
         "prices_menu": "📋 <b>Prices</b>\n\nSelect a tariff to view details and make a purchase.",
         "subs_menu": "📋 <b>Your active subscriptions</b>\n\n{list}",
         "no_subs": "⌛️ <b>You don't have any active subscriptions.</b>\n\nSelect a tariff to get access.",
-        "tariff_desc": "📋 <b>{name}</b>\n\n{price_line}\n\n{desc}",
-        "tariff_desc_paid": "📋 <b>{name}</b>\n\n{price_line}\nAccess duration: {duration}\n\n{desc}\n\n✅ <b>TARIFF PAID</b>\n\n🔑 To get the link contact support @Nastia_sup",
+        "tariff_desc": "📋 <b>{name}</b>\n\n💰 Price: {price_text}\nAccess duration: {duration}\n\n{desc}",
+        "tariff_desc_paid": "📋 <b>{name}</b>\n\n💰 Price: {price_text}\nAccess duration: {duration}\n\n{desc}\n\n✅ <b>TARIFF PAID</b>\n\n🔑 To get the link contact support @Nastia_sup",
         "enter_promo": "🏷️ <b>Enter promo code</b>\n\nType the promo code in the chat.",
         "promo_success": "✅ Promo code <b>{code}</b> activated! {discount}% discount 🔥\n\n📋 <b>{name}</b>\n💰 Price: <s>{old_rub} RUB</s> → {new_rub} RUB <b>(-{discount}%)</b>\n\nChoose a currency for payment.",
         "promo_fail": "❌ Promo code not found. Try again (or press ◀️ Cancel).",
@@ -256,7 +329,10 @@ TARIFFS = {
 }
 
 PROMO_CODES = {
-    "VIP10": 10, "SUPER25": 25, "HOMAKE40": 40, "BANK50": 50
+    "VIP10": 10,
+    "SUPER25": 25,
+    "HOMAKE40": 40,
+    "BANK50": 50
 }
 
 # --- ИНИЦИАЛИЗАЦИЯ ---
@@ -333,7 +409,7 @@ async def create_one_time_link(chat_id: str) -> str:
     try:
         invite_link = await bot.create_chat_invite_link(
             chat_id=chat_id,
-            member_limit=1,  # Только 1 человек может использовать
+            member_limit=1,
             creates_join_request=False
         )
         return invite_link.invite_link
@@ -343,28 +419,22 @@ async def create_one_time_link(chat_id: str) -> str:
 
 # --- ФУНКЦИЯ ДЛЯ СОХРАНЕНИЯ ФАКТА ОПЛАТЫ И ВЫДАЧИ ССЫЛКИ ---
 async def save_payment_and_send_link(message: Message, tariff_key: str, lang: str, user_id: int):
-    """Сохраняет факт оплаты, создаёт одноразовую ссылку и отправляет"""
+    """Сохраняет факт оплаты в БД, создаёт одноразовую ссылку и отправляет"""
     
-    # Проверяем есть ли такой канал
     if tariff_key not in CHANNEL_IDS:
         await message.answer("❌ Ошибка: канал для этого тарифа не настроен. Обратитесь к администратору.")
         return
     
     chat_id = CHANNEL_IDS[tariff_key]
-    
-    # Создаём одноразовую ссылку
     link = await create_one_time_link(chat_id)
     
     if not link:
         await message.answer("❌ Ошибка создания ссылки. Попробуйте позже или обратитесь к администратору.")
         return
     
-    # Сохраняем факт оплаты для пользователя
-    if user_id not in user_paid_tariffs:
-        user_paid_tariffs[user_id] = {}
-    user_paid_tariffs[user_id][tariff_key] = True
+    # Сохраняем в БД
+    add_paid_tariff(user_id, tariff_key)
     
-    # Отправляем ссылку
     tariff = TARIFFS[tariff_key]
     name = tariff['name_ru'] if lang == "ru" else tariff['name_en']
     
@@ -382,39 +452,35 @@ def get_main_keyboard(lang):
     ], resize_keyboard=True)
 
 def get_tariff_keyboard(lang):
+    """Главное меню тарифов - ТОЛЬКО НАЗВАНИЯ, БЕЗ ЦЕН"""
     buttons = []
     for key, data in TARIFFS.items():
         if data.get("category") == "main":
             name = data['name_ru'] if lang == 'ru' else data['name_en']
-            price = data['price_rub']
-            price_text = "Бесплатно" if price == 0 else f"{price} 🇷🇺RUB"
-            buttons.append([InlineKeyboardButton(text=f"{name} • {price_text}", callback_data=f"tariff_{key}")])
+            buttons.append([InlineKeyboardButton(text=name, callback_data=f"tariff_{key}")])
     buttons.append([InlineKeyboardButton(text="👈🏻 Паки", callback_data="show_paki")])
     return InlineKeyboardMarkup(inline_keyboard=buttons)
 
 def get_paki_keyboard(lang):
+    """Меню паков - ТОЛЬКО НАЗВАНИЯ, БЕЗ ЦЕН"""
     buttons = []
     for key, data in TARIFFS.items():
         if data.get("category") == "paki":
             name = data['name_ru'] if lang == 'ru' else data['name_en']
-            buttons.append([InlineKeyboardButton(text=f"{name} • {data['price_rub']} 🇷🇺RUB", callback_data=f"tariff_{key}")])
+            buttons.append([InlineKeyboardButton(text=name, callback_data=f"tariff_{key}")])
     buttons.append([InlineKeyboardButton(text="👈 НАЗАД", callback_data="back_to_prices")])
     return InlineKeyboardMarkup(inline_keyboard=buttons)
 
 def get_tariff_details_keyboard(tariff_key, lang, user_id):
     """Клавиатура для тарифа - если оплачен, кнопки оплаты нет"""
     buttons = []
-    
-    # Кнопка промокода всегда есть
     buttons.append([InlineKeyboardButton(text=LANG[lang]["btn_promo"], callback_data=f"enter_promo_{tariff_key}")])
     
-    # Проверяем оплачен ли тариф
-    is_paid = user_id in user_paid_tariffs and tariff_key in user_paid_tariffs[user_id]
+    # Проверка в БД
+    is_paid = is_tariff_paid(user_id, tariff_key)
     
     if not is_paid:
-        # Если не оплачен - кнопка "Способы оплаты"
         buttons.append([InlineKeyboardButton(text=LANG[lang]["btn_pay"], callback_data=f"choose_pay_{tariff_key}")])
-    # Если оплачен - НИКАКОЙ КНОПКИ! Только текст в описании
     
     buttons.append([InlineKeyboardButton(text=LANG[lang]["btn_back"], callback_data="back_to_prices")])
     
@@ -523,10 +589,12 @@ async def show_subscriptions(message: Message, state: FSMContext):
     lang = await get_lang(state)
     user_id = message.from_user.id
     
-    if user_id in user_paid_tariffs and user_paid_tariffs[user_id]:
-        # Формируем список оплаченных тарифов
+    # Получаем из БД
+    paid_list = get_paid_tariffs(user_id)
+    
+    if paid_list:
         subs_list = []
-        for tariff_key in user_paid_tariffs[user_id].keys():
+        for tariff_key in paid_list:
             if tariff_key in TARIFFS:
                 name = TARIFFS[tariff_key]['name_ru'] if lang == "ru" else TARIFFS[tariff_key]['name_en']
                 subs_list.append(LANG[lang]["subs_list_item"].format(name=name))
@@ -570,27 +638,28 @@ async def show_tariff_details(callback: CallbackQuery, state: FSMContext):
     desc = tariff['desc_ru'] if lang == "ru" else tariff['desc_en']
     
     if tariff['price_rub'] == 0:
-        price_line = "💰 Цена: БЕСПЛАТНО 🎉"
+        price_text = "БЕСПЛАТНО 🎉"
     elif discount > 0:
         new_price = int(tariff['price_rub'] * (1 - discount / 100))
-        price_line = f"💰 Цена: <s>{tariff['price_rub']} 🇷🇺RUB</s> → {new_price} 🇷🇺RUB <b>(-{discount}%)</b>"
+        price_text = f"<s>{tariff['price_rub']} 🇷🇺RUB</s> → {new_price} 🇷🇺RUB <b>(-{discount}%)</b>"
     else:
-        price_line = f"💰 Цена: {tariff['price_rub']} 🇷🇺RUB"
+        price_text = f"{tariff['price_rub']} 🇷🇺RUB"
     
-    # Проверяем оплачен ли тариф
-    is_paid = user_id in user_paid_tariffs and tariff_key in user_paid_tariffs[user_id]
+    # Проверка в БД
+    is_paid = is_tariff_paid(user_id, tariff_key)
     
     if is_paid:
         text = LANG[lang]["tariff_desc_paid"].format(
-            name=name, 
-            price_line=price_line,
+            name=name,
+            price_text=price_text,
             duration=duration,
             desc=desc
         )
     else:
         text = LANG[lang]["tariff_desc"].format(
-            name=name, 
-            price_line=price_line,
+            name=name,
+            price_text=price_text,
+            duration=duration,
             desc=desc
         )
     
@@ -633,25 +702,27 @@ async def cancel_promo(callback: CallbackQuery, state: FSMContext):
     desc = tariff['desc_ru'] if lang == "ru" else tariff['desc_en']
 
     if tariff['price_rub'] == 0:
-        price_line = "💰 Цена: БЕСПЛАТНО 🎉"
+        price_text = "БЕСПЛАТНО 🎉"
     elif discount > 0:
-        price_line = f"💰 Цена: <s>{tariff['price_rub']} RUB</s> -> {int(tariff['price_rub'] * (1 - discount/100))} RUB <b>(-{discount}%)</b>"
+        new_price = int(tariff['price_rub'] * (1 - discount / 100))
+        price_text = f"<s>{tariff['price_rub']} RUB</s> -> {new_price} RUB <b>(-{discount}%)</b>"
     else:
-        price_line = f"💰 Цена: {tariff['price_rub']} RUB"
+        price_text = f"{tariff['price_rub']} RUB"
 
-    is_paid = user_id in user_paid_tariffs and tariff_key in user_paid_tariffs[user_id]
+    is_paid = is_tariff_paid(user_id, tariff_key)
     
     if is_paid:
         text = LANG[lang]["tariff_desc_paid"].format(
-            name=name, 
-            price_line=price_line,
+            name=name,
+            price_text=price_text,
             duration=duration,
             desc=desc
         )
     else:
         text = LANG[lang]["tariff_desc"].format(
-            name=name, 
-            price_line=price_line,
+            name=name,
+            price_text=price_text,
+            duration=duration,
             desc=desc
         )
     
@@ -659,7 +730,7 @@ async def cancel_promo(callback: CallbackQuery, state: FSMContext):
 
 @dp.message(PromoStates.waiting_for_promo)
 async def process_promo(message: Message, state: FSMContext):
-    promo_code = message.text.strip()
+    promo_code = message.text.strip().upper()
     data = await state.get_data()
     tariff_key = data.get("current_tariff")
     lang = await get_lang(state)
@@ -693,7 +764,6 @@ async def choose_payment(callback: CallbackQuery, state: FSMContext):
     
     tariff = TARIFFS[tariff_key]
     
-    # Если тариф бесплатный - сразу выдаём ссылку
     if tariff['price_rub'] == 0:
         lang = await get_lang(state)
         user_id = callback.from_user.id
@@ -729,7 +799,6 @@ async def process_rub_payment(callback: CallbackQuery, state: FSMContext):
     
     tariff = TARIFFS[tariff_key]
     
-    # Если тариф бесплатный - сразу выдаём ссылку
     if tariff['price_rub'] == 0:
         lang = await get_lang(state)
         user_id = callback.from_user.id
@@ -784,7 +853,6 @@ async def process_stars_payment(callback: CallbackQuery, state: FSMContext):
     
     tariff = TARIFFS[tariff_key]
     
-    # Если тариф бесплатный - сразу выдаём ссылку
     if tariff['price_rub'] == 0:
         lang = await get_lang(state)
         user_id = callback.from_user.id
@@ -864,6 +932,10 @@ async def start_web_server():
 async def main():
     logging.basicConfig(level=logging.INFO)
     
+    # === ИНИЦИАЛИЗАЦИЯ БАЗЫ ДАННЫХ ===
+    init_db()
+    print("📁 База данных готова!")
+    
     print("🚀 ЗАПУСК БОТА")
     print("=" * 40)
     
@@ -887,6 +959,7 @@ async def main():
     print("🤖 Бот полностью готов!")
     print("📱 Команды: /start, /language, /reset")
     print("🧪 Тестовый тариф: БЕСПЛАТНО!")
+    print("💾 Данные сохраняются в SQLite")
     print("=" * 40)
     
     await dp.start_polling(bot)
