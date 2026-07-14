@@ -708,14 +708,16 @@ async def refresh_link(callback: CallbackQuery, state: FSMContext):
     else:
         await callback.answer("❌ Ошибка создания новой ссылки. Попробуйте позже.", show_alert=True)
 
-# --- ВЕБ-СЕРВЕР ---
+# --- ВЕБ-СЕРВЕР ДЛЯ UPTIMEROBOT ---
 async def handle_uptime_check(request):
-    return web.Response(text="Bot is alive and kicking!")
+    """Быстрый ответ для UptimeRobot"""
+    return web.Response(text="OK", status=200)
 
 async def start_web_server():
     app = web.Application()
     app.router.add_get('/', handle_uptime_check)
     app.router.add_get('/health', handle_uptime_check)
+    app.router.add_get('/ping', handle_uptime_check)
     
     port = int(os.environ.get("PORT", 8080))
     runner = web.AppRunner(app)
@@ -724,7 +726,6 @@ async def start_web_server():
     await site.start()
     print(f"✅ Веб-сервер запущен на порту {port}")
     return runner
-
 # --- ЗАПУСК ---
 async def main():
     logging.basicConfig(level=logging.INFO)
