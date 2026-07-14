@@ -24,6 +24,7 @@ BOT_TOKEN = "8843954886:AAEpfaWLm6sTfmq2T-mShBilX8mInCXs3as"
 PROJECT_NAME = "VIP"
 SUPPORT_CONTACT_RU = "https://t.me/Nastia_sup"
 SUPPORT_CONTACT_EN = "https://t.me/Nastia_sup"
+ADMIN_ID = 8559381302  # Твой Telegram ID
 
 DOCS_RU = {
     "offer": "https://telegra.ph/POLZOVATELSKOE-SOGLASHENIE-07-01-29",
@@ -35,23 +36,27 @@ DOCS_EN = {
 }
 
 # ==================================================
-# ⭐ ССЫЛКИ ДЛЯ КАЖДОГО ТАРИФА (МЕНЯЙ ЗДЕСЬ!) ⭐
+# ⭐ ID КАНАЛОВ ДЛЯ КАЖДОГО ТАРИФА (МЕНЯЙ ЗДЕСЬ!) ⭐
 # ==================================================
-TARIFF_LINKS = {
-    "1": "https://t.me/+ваша_ссылка_для_слива_знаменитостей",   # Слив знаменитостей
-    "2": "https://t.me/+ваша_ссылка_для_сливов_шкур",          # Сливы шкур
-    "3": "https://t.me/+ваша_ссылка_для_mini_det",             # Mini Детск. До 12
-    "4": "https://t.me/+ваша_ссылка_для_шкодниц",              # ШкоДнищь
-    "5": "https://t.me/+ваша_ссылка_для_premium_det",          # Premium Детск. До 12
-    "6": "https://t.me/+ваша_ссылка_для_зоо",                  # Канал Зоо
-    "7": "https://t.me/+ваша_ссылка_для_геев",                 # Геи
-    "8": "https://t.me/+ваша_ссылка_для_закладчиц",            # Закладчицы
-    "9": "https://t.me/+ваша_ссылка_для_все_включено",         # Всё включено 2026
-    "10": "https://t.me/velvet_vpn_bot?start=AW3BJ7lz",        # Vpn 7 дней
-    "11": "https://t.me/+ваша_ссылка_для_обновления_ссылок",   # Пак - Обновление ссылок
-    "test": "https://t.me/+ваша_ссылка_для_тестового_тарифа",  # Тестовый тариф
+CHANNEL_IDS = {
+    "1": "-1001234567890",   # Слив знаменитостей (ЗАМЕНИ НА РЕАЛЬНЫЙ ID)
+    "2": "-1001234567891",   # Сливы шкур
+    "3": "-1001234567892",   # Mini Детск. До 12
+    "4": "-1001234567893",   # ШкоДнищь
+    "5": "-1001234567894",   # Premium Детск. До 12
+    "6": "-1001234567895",   # Канал Зоо
+    "7": "-1001234567896",   # Геи
+    "8": "-1001234567897",   # Закладчицы
+    "9": "-1001234567898",   # Всё включено 2026
+    "10": "-1001234567899",  # Vpn 7 дней
+    "11": "-1001234567900",  # Пак - Обновление ссылок
+    "test": "-1001234567901", # Тестовый тариф
 }
 # ==================================================
+
+# --- ХРАНИЛИЩЕ ОПЛАЧЕННЫХ ТАРИФОВ ДЛЯ ПОЛЬЗОВАТЕЛЕЙ ---
+# Хранит только факт оплаты, без ссылок
+user_paid_tariffs = {}
 
 # --- ТЕКСТЫ ---
 LANG = {
@@ -59,8 +64,10 @@ LANG = {
         "start_promo": "🎉 <b>Промокод {code} активирован! Скидка {discount}%!</b>",
         "start_welcome": "👋 Привет, {name}!\n\n<a href=\"{offer}\">Пользовательское соглашение</a>\n<a href=\"{policy}\">Политика конфиденциальности</a>",
         "prices_menu": "📋 <b>Прайс</b>\n\nВыберите тариф, чтобы узнать подробности и оформить покупку.",
-        "subs_menu": "⌛️ <b>У Вас нет действующей подписки.</b>\n\nОзнакомьтесь с тарифами, нажав на соответствующую кнопку.",
+        "subs_menu": "📋 <b>Ваши активные подписки</b>\n\n{list}",
+        "no_subs": "⌛️ <b>У Вас нет действующих подписок.</b>\n\nВыберите тариф, чтобы оформить доступ.",
         "tariff_desc": "📋 <b>{name}</b>\n\n{price_line}\n\n{desc}",
+        "tariff_desc_paid": "📋 <b>{name}</b>\n\n{price_line}\nСрок доступа: {duration}\n\n{desc}\n\n✅ <b>ТАРИФ ОПЛАЧЕН</b>\n\n🔑 Для получения ссылки напишите в поддержку @Nastia_sup",
         "enter_promo": "🏷️ <b>Введите код промокода</b>\n\nНапишите промокод в чат.",
         "promo_success": "✅ Промокод <b>{code}</b> активирован! Скидка {discount}% 🔥\n\n📋 <b>{name}</b>\n💰 Цена: <s>{old_rub} RUB</s> → {new_rub} RUB <b>(-{discount}%)</b>\n\nВыберите валюту для оплаты.",
         "promo_fail": "❌ Промокод не найден. Попробуйте еще раз (или нажмите ◀️ Отмена).",
@@ -69,7 +76,7 @@ LANG = {
         "pay_stars": "📋 <b>{name}</b>\nСрок доступа: {duration}\n{price_line}💳 Способ оплаты: ЗА ЗВЕЗДЫ ⭐\n\n💰 Итоговая стоимость: {final} STARS\n\nℹ️ <b>Информация по оплате</b>\nПодарить звезды или подарки на этот аккаунт - <a href=\"{support}\">@Nastia_sup</a>\n\nкурс:\n1 ⭐ - 1 рубль\n\nОтправьте скриншот или файл подтверждения оплаты - он будет передан продавцу.\n\n⚠️ <b>Внимание:</b> на квитанции должны быть четко видны: дата, время и сумма платежа!\nЗа поддельные скриншоты продавец вас может заблокировать!",
         "refresh_link": "♻️ <i>Ссылка обновлена!</i>",
         "btn_prices": "💵 Тарифы",
-        "btn_subs": "⏳ Моя подписка",
+        "btn_subs": "⏳ Мои подписки",
         "btn_promo": "🏷️ Ввести промокод",
         "btn_pay": "💳 Способы оплаты",
         "btn_back": "👈 НАЗАД",
@@ -83,15 +90,18 @@ LANG = {
         "btn_cancel": "🚫 ОТМЕНА",
         "btn_stars_go": "⭐ Stars со скидкой до 42%",
         "btn_lang": "🇷🇺 Язык",
-        "payment_success": "✅ <b>Оплата прошла!</b>\n\n🔗 <b>Ваша ссылка доступа:</b>\n{link}\n\nСпасибо за покупку! ❤️",
-        "payment_success_test": "*Оплата прошла!* 🎉\n\nЭто тестовый тариф. Спасибо за проверку! 🙌"
+        "payment_success": "✅ <b>Оплата прошла!</b>\n\n🔗 <b>Ваша одноразовая ссылка доступа:</b>\n{link}\n\n⚠️ <b>Внимание!</b> Ссылка действительна только 1 раз!\n\nСпасибо за покупку! ❤️",
+        "payment_success_test": "✅ <b>Доступ открыт!</b>\n\n🔗 <b>Ваша одноразовая ссылка доступа:</b>\n{link}\n\n⚠️ <b>Внимание!</b> Ссылка действительна только 1 раз!\n\nСпасибо за использование бота! ❤️",
+        "subs_list_item": "• {name} (оплачен ✅)",
     },
     "en": {
         "start_promo": "🎉 <b>Promo code {code} activated! {discount}% discount!</b>",
         "start_welcome": "👋 Hello, {name}!\n\n<a href=\"{offer}\">Terms of Service</a>\n<a href=\"{policy}\">Privacy Policy</a>",
         "prices_menu": "📋 <b>Prices</b>\n\nSelect a tariff to view details and make a purchase.",
-        "subs_menu": "⌛️ <b>You don't have an active subscription.</b>\n\nCheck out the tariffs by pressing the button below.",
+        "subs_menu": "📋 <b>Your active subscriptions</b>\n\n{list}",
+        "no_subs": "⌛️ <b>You don't have any active subscriptions.</b>\n\nSelect a tariff to get access.",
         "tariff_desc": "📋 <b>{name}</b>\n\n{price_line}\n\n{desc}",
+        "tariff_desc_paid": "📋 <b>{name}</b>\n\n{price_line}\nAccess duration: {duration}\n\n{desc}\n\n✅ <b>TARIFF PAID</b>\n\n🔑 To get the link contact support @Nastia_sup",
         "enter_promo": "🏷️ <b>Enter promo code</b>\n\nType the promo code in the chat.",
         "promo_success": "✅ Promo code <b>{code}</b> activated! {discount}% discount 🔥\n\n📋 <b>{name}</b>\n💰 Price: <s>{old_rub} RUB</s> → {new_rub} RUB <b>(-{discount}%)</b>\n\nChoose a currency for payment.",
         "promo_fail": "❌ Promo code not found. Try again (or press ◀️ Cancel).",
@@ -100,7 +110,7 @@ LANG = {
         "pay_stars": "📋 <b>{name}</b>\nAccess duration: {duration}\n{price_line}💳 Payment method: FOR STARS ⭐\n\n💰 Total cost: {final} STARS\n\nℹ️ <b>Payment info</b>\nSend stars or gifts to this account - <a href=\"{support}\">@Nastia_sup</a>\n\nRate:\n1 ⭐ - 1 ruble\n\nSend a screenshot or file confirming payment - it will be forwarded to the seller.\n\n⚠️ <b>Attention:</b> the receipt must clearly show: date, time, and payment amount!\nFor fake screenshots, the seller may block you!",
         "refresh_link": "♻️ <i>Link refreshed!</i>",
         "btn_prices": "💵 Prices",
-        "btn_subs": "⏳ My subscription",
+        "btn_subs": "⏳ My subscriptions",
         "btn_promo": "🏷️ Enter promo code",
         "btn_pay": "💳 Payment methods",
         "btn_back": "👈 Back",
@@ -114,8 +124,9 @@ LANG = {
         "btn_cancel": "🚫 CANCEL",
         "btn_stars_go": "⭐ Stars up to 42% off",
         "btn_lang": "🇬🇧 Language",
-        "payment_success": "✅ <b>Payment successful!</b>\n\n🔗 <b>Your access link:</b>\n{link}\n\nThank you for your purchase! ❤️",
-        "payment_success_test": "*Payment successful!* 🎉\n\nThis is a test tariff. Thanks for testing! 🙌"
+        "payment_success": "✅ <b>Payment successful!</b>\n\n🔗 <b>Your one-time access link:</b>\n{link}\n\n⚠️ <b>Warning!</b> The link is valid only 1 time!\n\nThank you for your purchase! ❤️",
+        "payment_success_test": "✅ <b>Access granted!</b>\n\n🔗 <b>Your one-time access link:</b>\n{link}\n\n⚠️ <b>Warning!</b> The link is valid only 1 time!\n\nThank you for using the bot! ❤️",
+        "subs_list_item": "• {name} (paid ✅)",
     }
 }
 
@@ -231,16 +242,16 @@ TARIFFS = {
         "category": "paki",
         "desc_ru": "Cливaeм ccлыки дpyгиx кaнaлoв, peкoмeндyeм пoкyпaть пocлe пpocмoтpa дpyгиx тapифoв\n\nЕдинственный пак который не входит во всё включено"
     },
-    # --- ТЕСТОВЫЙ ТАРИФ ---
+    # --- ТЕСТОВЫЙ ТАРИФ (БЕСПЛАТНЫЙ) ---
     "test": {
-        "name_ru": "🧪 ТЕСТОВЫЙ тариф (2 руб)",
-        "name_en": "🧪 TEST tariff (2 rub)",
-        "price_rub": 2,
-        "price_stars": 2,
+        "name_ru": "🧪 ТЕСТОВЫЙ тариф (Бесплатно)",
+        "name_en": "🧪 TEST tariff (Free)",
+        "price_rub": 0,
+        "price_stars": 0,
         "duration_ru": "Тестовый",
         "duration_en": "Test",
         "category": "main",
-        "desc_ru": "🧪 Это тестовый тариф для проверки оплаты.\n\nПосле оплаты вы получите ссылку."
+        "desc_ru": "🧪 Это тестовый тариф. Он полностью БЕСПЛАТНЫЙ!\n\nПросто выберите его и получите ссылку для тестирования."
     }
 }
 
@@ -316,20 +327,51 @@ async def full_reset():
         print(f"   ❌ Ошибка при сбросе: {e}")
         return False
 
-# --- ФУНКЦИЯ ДЛЯ ВЫДАЧИ ССЫЛКИ ---
-async def send_access_link(message: Message, tariff_key: str, lang: str):
-    """Отправляет ссылку доступа для тарифа"""
-    link = TARIFF_LINKS.get(tariff_key)
+# --- ФУНКЦИЯ ДЛЯ СОЗДАНИЯ ОДНОРАЗОВОЙ ССЫЛКИ ---
+async def create_one_time_link(chat_id: str) -> str:
+    """Создаёт одноразовую пригласительную ссылку в канал"""
+    try:
+        invite_link = await bot.create_chat_invite_link(
+            chat_id=chat_id,
+            member_limit=1,  # Только 1 человек может использовать
+            creates_join_request=False
+        )
+        return invite_link.invite_link
+    except Exception as e:
+        logging.error(f"Ошибка создания ссылки: {e}")
+        return None
+
+# --- ФУНКЦИЯ ДЛЯ СОХРАНЕНИЯ ФАКТА ОПЛАТЫ И ВЫДАЧИ ССЫЛКИ ---
+async def save_payment_and_send_link(message: Message, tariff_key: str, lang: str, user_id: int):
+    """Сохраняет факт оплаты, создаёт одноразовую ссылку и отправляет"""
+    
+    # Проверяем есть ли такой канал
+    if tariff_key not in CHANNEL_IDS:
+        await message.answer("❌ Ошибка: канал для этого тарифа не настроен. Обратитесь к администратору.")
+        return
+    
+    chat_id = CHANNEL_IDS[tariff_key]
+    
+    # Создаём одноразовую ссылку
+    link = await create_one_time_link(chat_id)
+    
+    if not link:
+        await message.answer("❌ Ошибка создания ссылки. Попробуйте позже или обратитесь к администратору.")
+        return
+    
+    # Сохраняем факт оплаты для пользователя
+    if user_id not in user_paid_tariffs:
+        user_paid_tariffs[user_id] = {}
+    user_paid_tariffs[user_id][tariff_key] = True
+    
+    # Отправляем ссылку
+    tariff = TARIFFS[tariff_key]
+    name = tariff['name_ru'] if lang == "ru" else tariff['name_en']
     
     if tariff_key == "test":
-        # Для тестового тарифа - специальное сообщение
-        text = LANG[lang]["payment_success_test"]
-    elif link:
-        # Для обычных тарифов - ссылка
-        text = LANG[lang]["payment_success"].format(link=link)
+        text = LANG[lang]["payment_success_test"].format(link=link)
     else:
-        # Если ссылка не найдена
-        text = "❌ Ссылка для этого тарифа пока не настроена. Обратитесь к администратору."
+        text = LANG[lang]["payment_success"].format(link=link)
     
     await message.answer(text, disable_web_page_preview=False)
 
@@ -344,7 +386,9 @@ def get_tariff_keyboard(lang):
     for key, data in TARIFFS.items():
         if data.get("category") == "main":
             name = data['name_ru'] if lang == 'ru' else data['name_en']
-            buttons.append([InlineKeyboardButton(text=f"{name} • {data['price_rub']} 🇷🇺RUB", callback_data=f"tariff_{key}")])
+            price = data['price_rub']
+            price_text = "Бесплатно" if price == 0 else f"{price} 🇷🇺RUB"
+            buttons.append([InlineKeyboardButton(text=f"{name} • {price_text}", callback_data=f"tariff_{key}")])
     buttons.append([InlineKeyboardButton(text="👈🏻 Паки", callback_data="show_paki")])
     return InlineKeyboardMarkup(inline_keyboard=buttons)
 
@@ -355,6 +399,25 @@ def get_paki_keyboard(lang):
             name = data['name_ru'] if lang == 'ru' else data['name_en']
             buttons.append([InlineKeyboardButton(text=f"{name} • {data['price_rub']} 🇷🇺RUB", callback_data=f"tariff_{key}")])
     buttons.append([InlineKeyboardButton(text="👈 НАЗАД", callback_data="back_to_prices")])
+    return InlineKeyboardMarkup(inline_keyboard=buttons)
+
+def get_tariff_details_keyboard(tariff_key, lang, user_id):
+    """Клавиатура для тарифа - если оплачен, кнопки оплаты нет"""
+    buttons = []
+    
+    # Кнопка промокода всегда есть
+    buttons.append([InlineKeyboardButton(text=LANG[lang]["btn_promo"], callback_data=f"enter_promo_{tariff_key}")])
+    
+    # Проверяем оплачен ли тариф
+    is_paid = user_id in user_paid_tariffs and tariff_key in user_paid_tariffs[user_id]
+    
+    if not is_paid:
+        # Если не оплачен - кнопка "Способы оплаты"
+        buttons.append([InlineKeyboardButton(text=LANG[lang]["btn_pay"], callback_data=f"choose_pay_{tariff_key}")])
+    # Если оплачен - НИКАКОЙ КНОПКИ! Только текст в описании
+    
+    buttons.append([InlineKeyboardButton(text=LANG[lang]["btn_back"], callback_data="back_to_prices")])
+    
     return InlineKeyboardMarkup(inline_keyboard=buttons)
 
 def get_payment_method_keyboard(tariff_key, discount_percent=0, lang="ru"):
@@ -412,7 +475,6 @@ async def cmd_start(message: Message, state: FSMContext):
     lang = await get_lang(state)
     user_name = message.from_user.first_name
     
-    # ИСПРАВЛЕННЫЙ ТЕКСТ ПРИВЕТСТВИЯ
     text = f"""👋 Привет, {user_name}!
 Ты попал в наш бот✅
 
@@ -427,7 +489,6 @@ async def cmd_start(message: Message, state: FSMContext):
 
 @dp.message(Command("reset"))
 async def cmd_reset(message: Message):
-    ADMIN_ID = 8559381302  # ЗАМЕНИ НА СВОЙ ID!
     if message.from_user.id != ADMIN_ID:
         await message.answer("❌ У вас нет прав для этой команды!")
         return
@@ -460,7 +521,22 @@ async def show_prices(message: Message, state: FSMContext):
 @dp.message(F.text.in_([LANG["ru"]["btn_subs"], LANG["en"]["btn_subs"]]))
 async def show_subscriptions(message: Message, state: FSMContext):
     lang = await get_lang(state)
-    await message.answer(LANG[lang]["subs_menu"], reply_markup=get_back_to_prices_keyboard(lang))
+    user_id = message.from_user.id
+    
+    if user_id in user_paid_tariffs and user_paid_tariffs[user_id]:
+        # Формируем список оплаченных тарифов
+        subs_list = []
+        for tariff_key in user_paid_tariffs[user_id].keys():
+            if tariff_key in TARIFFS:
+                name = TARIFFS[tariff_key]['name_ru'] if lang == "ru" else TARIFFS[tariff_key]['name_en']
+                subs_list.append(LANG[lang]["subs_list_item"].format(name=name))
+        
+        if subs_list:
+            text = LANG[lang]["subs_menu"].format(list="\n".join(subs_list))
+            await message.answer(text)
+            return
+    
+    await message.answer(LANG[lang]["no_subs"])
 
 @dp.callback_query(F.data == "back_to_prices")
 async def back_to_prices(callback: CallbackQuery, state: FSMContext):
@@ -487,24 +563,38 @@ async def show_tariff_details(callback: CallbackQuery, state: FSMContext):
     lang = await get_lang(state)
     data = await state.get_data()
     discount = data.get("discount", 0)
+    user_id = callback.from_user.id
     
     name = tariff['name_ru'] if lang == "ru" else tariff['name_en']
     duration = tariff['duration_ru'] if lang == "ru" else tariff['duration_en']
     desc = tariff['desc_ru'] if lang == "ru" else tariff['desc_en']
     
-    if discount > 0:
+    if tariff['price_rub'] == 0:
+        price_line = "💰 Цена: БЕСПЛАТНО 🎉"
+    elif discount > 0:
         new_price = int(tariff['price_rub'] * (1 - discount / 100))
         price_line = f"💰 Цена: <s>{tariff['price_rub']} 🇷🇺RUB</s> → {new_price} 🇷🇺RUB <b>(-{discount}%)</b>"
     else:
         price_line = f"💰 Цена: {tariff['price_rub']} 🇷🇺RUB"
     
-    text = f"📋 <b>{name}</b>\n\n{price_line}\nСрок доступа: {duration}\n\n{desc}"
+    # Проверяем оплачен ли тариф
+    is_paid = user_id in user_paid_tariffs and tariff_key in user_paid_tariffs[user_id]
     
-    await callback.message.edit_text(text, reply_markup=InlineKeyboardMarkup(inline_keyboard=[
-        [InlineKeyboardButton(text=LANG[lang]["btn_promo"], callback_data=f"enter_promo_{tariff_key}")],
-        [InlineKeyboardButton(text=LANG[lang]["btn_pay"], callback_data=f"choose_pay_{tariff_key}")],
-        [InlineKeyboardButton(text=LANG[lang]["btn_back"], callback_data="back_to_prices")]
-    ]))
+    if is_paid:
+        text = LANG[lang]["tariff_desc_paid"].format(
+            name=name, 
+            price_line=price_line,
+            duration=duration,
+            desc=desc
+        )
+    else:
+        text = LANG[lang]["tariff_desc"].format(
+            name=name, 
+            price_line=price_line,
+            desc=desc
+        )
+    
+    await callback.message.edit_text(text, reply_markup=get_tariff_details_keyboard(tariff_key, lang, user_id))
 
 @dp.callback_query(F.data.startswith("enter_promo_"))
 async def enter_promo(callback: CallbackQuery, state: FSMContext):
@@ -536,22 +626,36 @@ async def cancel_promo(callback: CallbackQuery, state: FSMContext):
     tariff = TARIFFS[tariff_key]
     data = await state.get_data()
     discount = data.get("discount", 0)
+    user_id = callback.from_user.id
     
     name = tariff['name_ru'] if lang == "ru" else tariff['name_en']
     duration = tariff['duration_ru'] if lang == "ru" else tariff['duration_en']
     desc = tariff['desc_ru'] if lang == "ru" else tariff['desc_en']
 
-    if discount > 0:
+    if tariff['price_rub'] == 0:
+        price_line = "💰 Цена: БЕСПЛАТНО 🎉"
+    elif discount > 0:
         price_line = f"💰 Цена: <s>{tariff['price_rub']} RUB</s> -> {int(tariff['price_rub'] * (1 - discount/100))} RUB <b>(-{discount}%)</b>"
     else:
         price_line = f"💰 Цена: {tariff['price_rub']} RUB"
 
-    text = f"📋 <b>{name}</b>\n\n{price_line}\nСрок доступа: {duration}\n\n{desc}"
-    await callback.message.answer(text, reply_markup=InlineKeyboardMarkup(inline_keyboard=[
-        [InlineKeyboardButton(text=LANG[lang]["btn_promo"], callback_data=f"enter_promo_{tariff_key}")],
-        [InlineKeyboardButton(text=LANG[lang]["btn_pay"], callback_data=f"choose_pay_{tariff_key}")],
-        [InlineKeyboardButton(text=LANG[lang]["btn_back"], callback_data="back_to_prices")]
-    ]))
+    is_paid = user_id in user_paid_tariffs and tariff_key in user_paid_tariffs[user_id]
+    
+    if is_paid:
+        text = LANG[lang]["tariff_desc_paid"].format(
+            name=name, 
+            price_line=price_line,
+            duration=duration,
+            desc=desc
+        )
+    else:
+        text = LANG[lang]["tariff_desc"].format(
+            name=name, 
+            price_line=price_line,
+            desc=desc
+        )
+    
+    await callback.message.answer(text, reply_markup=get_tariff_details_keyboard(tariff_key, lang, user_id))
 
 @dp.message(PromoStates.waiting_for_promo)
 async def process_promo(message: Message, state: FSMContext):
@@ -587,11 +691,21 @@ async def choose_payment(callback: CallbackQuery, state: FSMContext):
         await callback.answer("❌ Тариф не найден", show_alert=True)
         return
     
+    tariff = TARIFFS[tariff_key]
+    
+    # Если тариф бесплатный - сразу выдаём ссылку
+    if tariff['price_rub'] == 0:
+        lang = await get_lang(state)
+        user_id = callback.from_user.id
+        await callback.message.delete()
+        await save_payment_and_send_link(callback.message, tariff_key, lang, user_id)
+        await callback.answer("✅ Доступ открыт!")
+        return
+    
     lang = await get_lang(state)
     data = await state.get_data()
     discount = data.get("discount", 0)
     
-    tariff = TARIFFS[tariff_key]
     name = tariff['name_ru'] if lang == "ru" else tariff['name_en']
     duration = tariff['duration_ru'] if lang == "ru" else tariff['duration_en']
     
@@ -613,10 +727,20 @@ async def process_rub_payment(callback: CallbackQuery, state: FSMContext):
         await callback.answer("❌ Тариф не найден", show_alert=True)
         return
     
+    tariff = TARIFFS[tariff_key]
+    
+    # Если тариф бесплатный - сразу выдаём ссылку
+    if tariff['price_rub'] == 0:
+        lang = await get_lang(state)
+        user_id = callback.from_user.id
+        await callback.message.delete()
+        await save_payment_and_send_link(callback.message, tariff_key, lang, user_id)
+        await callback.answer("✅ Доступ открыт!")
+        return
+    
     lang = await get_lang(state)
     data = await state.get_data()
     discount = data.get("discount", 0)
-    tariff = TARIFFS[tariff_key]
     
     final_price = int(tariff['price_rub'] * (1 - discount / 100))
     user_id = callback.from_user.id
@@ -639,15 +763,15 @@ async def process_rub_payment(callback: CallbackQuery, state: FSMContext):
     else:
         await callback.answer("❌ Ошибка создания платежа. Попробуйте позже или выберите другой способ оплаты.", show_alert=True)
 
-# --- ОБРАБОТЧИК УСПЕШНОЙ ОПЛАТЫ (ВЫДАЁТ ССЫЛКУ) ---
+# --- ОБРАБОТЧИК УСПЕШНОЙ ОПЛАТЫ ---
 @dp.callback_query(F.data.startswith("payment_success_"))
 async def payment_success(callback: CallbackQuery, state: FSMContext):
     tariff_key = callback.data.replace("payment_success_", "")
     lang = await get_lang(state)
+    user_id = callback.from_user.id
     
     await callback.message.delete()
-    
-    await send_access_link(callback.message, tariff_key, lang)
+    await save_payment_and_send_link(callback.message, tariff_key, lang, user_id)
     await callback.answer("✅ Оплата успешно завершена!")
 
 @dp.callback_query(F.data.startswith("pay_stars_"))
@@ -658,10 +782,20 @@ async def process_stars_payment(callback: CallbackQuery, state: FSMContext):
         await callback.answer("❌ Тариф не найден", show_alert=True)
         return
     
+    tariff = TARIFFS[tariff_key]
+    
+    # Если тариф бесплатный - сразу выдаём ссылку
+    if tariff['price_rub'] == 0:
+        lang = await get_lang(state)
+        user_id = callback.from_user.id
+        await callback.message.delete()
+        await save_payment_and_send_link(callback.message, tariff_key, lang, user_id)
+        await callback.answer("✅ Доступ открыт!")
+        return
+    
     lang = await get_lang(state)
     data = await state.get_data()
     discount = data.get("discount", 0)
-    tariff = TARIFFS[tariff_key]
     name = tariff['name_ru'] if lang == "ru" else tariff['name_en']
     duration = tariff['duration_ru'] if lang == "ru" else tariff['duration_en']
     
@@ -710,7 +844,6 @@ async def refresh_link(callback: CallbackQuery, state: FSMContext):
 
 # --- ВЕБ-СЕРВЕР ДЛЯ UPTIMEROBOT ---
 async def handle_uptime_check(request):
-    """Быстрый ответ для UptimeRobot"""
     return web.Response(text="OK", status=200)
 
 async def start_web_server():
@@ -726,6 +859,7 @@ async def start_web_server():
     await site.start()
     print(f"✅ Веб-сервер запущен на порту {port}")
     return runner
+
 # --- ЗАПУСК ---
 async def main():
     logging.basicConfig(level=logging.INFO)
@@ -752,7 +886,7 @@ async def main():
     print("=" * 40)
     print("🤖 Бот полностью готов!")
     print("📱 Команды: /start, /language, /reset")
-    print("🧪 Тестовый тариф: 2 рубля")
+    print("🧪 Тестовый тариф: БЕСПЛАТНО!")
     print("=" * 40)
     
     await dp.start_polling(bot)
