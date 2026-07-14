@@ -5,6 +5,7 @@ import json
 import uuid
 import aiohttp
 import sqlite3
+from datetime import datetime, timedelta
 from aiogram import Bot, Dispatcher, types, F
 from aiogram.types import Message, CallbackQuery, InlineKeyboardMarkup, InlineKeyboardButton, ReplyKeyboardMarkup, KeyboardButton, BotCommand
 from aiogram.filters import CommandStart, Command
@@ -405,11 +406,14 @@ async def full_reset():
 
 # --- ФУНКЦИЯ ДЛЯ СОЗДАНИЯ ОДНОРАЗОВОЙ ССЫЛКИ ---
 async def create_one_time_link(chat_id: str) -> str:
-    """Создаёт одноразовую пригласительную ссылку в канал"""
+    """Создаёт ссылку, которая живёт 30 секунд"""
     try:
+        expire_date = datetime.now() + timedelta(seconds=30)
+        
         invite_link = await bot.create_chat_invite_link(
             chat_id=chat_id,
             member_limit=1,
+            expire_date=expire_date,
             creates_join_request=False
         )
         return invite_link.invite_link
