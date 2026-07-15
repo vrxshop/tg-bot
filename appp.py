@@ -749,6 +749,33 @@ async def enter_promo(callback: CallbackQuery, state: FSMContext):
     )
     await state.set_state(PromoStates.waiting_for_promo)
 
+@dp.message(PromoStates.waiting_for_promo)
+async def process_promo(message: Message, state: FSMContext):
+    promo_code = message.text.strip().upper()
+    data = await state.get_data()
+    tariff_key = data.get("current_tariff")
+    lang = await get_lang(state)
+    
+    if not tariff_key or tariff_key not in TARIFFS:
+        await state.clear()
+        await message.answer("❌ Ошибка. Попробуйте выбрать тариф заново.")
+        return
+
+    if promo_code in PROMO_CODES:
+        discount = PROMO_CODES[promo_code]
+        # СОХРАНЯЕМ СКИДКУ, НЕ ОЧИЩАЯ STATE!
+        await state.update_data(discount=discount)
+        # НЕ УДАЛЯЙ await state.clear() !!!
+        
+        tariff = TARIFFS[tariff_key]
+        name = tariff['name_ru'] if lang == "ru" else tariff['name_en']
+        new_rub = int(tariff['price_rub'] * (1 - discount / 100))
+        
+        text = LANG[lang]["promo_success"].format(code=promo_code, discount=discount, name=name, old_rub=tariff['price_rub'], new_rub=new_rub)
+        await message.answer(text, reply_markup=get_payment_method_keyboard(tariff_key, discount, lang))
+    else:
+        await message.answer(LANG[lang]["promo_fail"])
+
 @dp.callback_query(F.data.startswith("cancel_promo_"))
 async def cancel_promo(callback: CallbackQuery, state: FSMContext):
     tariff_key = callback.data.replace("cancel_promo_", "")
@@ -811,7 +838,7 @@ async def process_promo(message: Message, state: FSMContext):
     if promo_code in PROMO_CODES:
         discount = PROMO_CODES[promo_code]
         await state.update_data(discount=discount)
-        await state.clear()
+        # await state.clear()  # <-- УБЕРИ ЭТУ СТРОКУ!
         
         tariff = TARIFFS[tariff_key]
         name = tariff['name_ru'] if lang == "ru" else tariff['name_en']
