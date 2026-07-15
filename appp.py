@@ -22,7 +22,7 @@ ROLLYPAY_API_KEY = "z39_r_COJdiB7PWeddOYvzT2rx4cjIbS1m4JJcgBTi0"
 ROLLYPAY_CALLBACK_URL = "https://t-bot-18jz.onrender.com/webhook"
 
 # --- КОНФИГУРАЦИЯ БОТА ---
-BOT_TOKEN = "8843954886:AAE_s8K-qw2gFn7Z2zQmd9pvt81Cwxya9tA"
+BOT_TOKEN = "8843954886:AAG7qoHY8qaWJv2a7iJ677FNIZUkWX3cTmI"
 PROJECT_NAME = "VIP"
 SUPPORT_CONTACT_RU = "https://t.me/Nastia_sup"
 SUPPORT_CONTACT_EN = "https://t.me/Nastia_sup"
