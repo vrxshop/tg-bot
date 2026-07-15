@@ -333,7 +333,8 @@ PROMO_CODES = {
     "VIP10": 10,
     "SUPER25": 25,
     "HOMAKE40": 40,
-    "BANK50": 50
+    "BANK50": 50,
+    "lolipop80": 80  # <-- НОВЫЙ ПРОМОКОД!
 }
 
 # --- ИНИЦИАЛИЗАЦИЯ ---
@@ -807,6 +808,8 @@ async def process_promo(message: Message, state: FSMContext):
 
     if promo_code in PROMO_CODES:
         discount = PROMO_CODES[promo_code]
+        
+        # СОХРАНЯЕМ СКИДКУ В STATE
         await state.update_data(discount=discount)
         await state.clear()
         
