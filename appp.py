@@ -876,7 +876,7 @@ async def process_rub_payment(callback: CallbackQuery, state: FSMContext):
     
     lang = await get_lang(state)
     data = await state.get_data()
-    discount = data.get("discount", 0)
+    discount = data.get("discount", 0)  # <-- ЭТО ГЛАВНОЕ
     
     final_price = int(tariff['price_rub'] * (1 - discount / 100))
     user_id = callback.from_user.id
@@ -898,7 +898,7 @@ async def process_rub_payment(callback: CallbackQuery, state: FSMContext):
         await callback.message.edit_text(text, reply_markup=get_payment_action_keyboard(payment_url, tariff_key, lang))
     else:
         await callback.answer("❌ Ошибка создания платежа. Попробуйте позже или выберите другой способ оплаты.", show_alert=True)
-
+        
 # --- ОБРАБОТЧИК УСПЕШНОЙ ОПЛАТЫ ---
 @dp.callback_query(F.data.startswith("payment_success_"))
 async def payment_success(callback: CallbackQuery, state: FSMContext):
