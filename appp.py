@@ -329,12 +329,13 @@ TEST_TARIFF = {
     "desc_ru": "🧪 Это тестовый тариф. Он полностью БЕСПЛАТНЫЙ!\n\nПросто выберите его и получите ссылку для тестирования."
 }
 
+# --- ПРОМОКОДЫ ---
 PROMO_CODES = {
     "VIP10": 10,
     "SUPER25": 25,
     "HOMAKE40": 40,
     "BANK50": 50,
-    "lolipop80": 80  # <-- НОВЫЙ ПРОМОКОД!
+    "LOLIPOP80": 80
 }
 
 # --- ИНИЦИАЛИЗАЦИЯ ---
@@ -808,8 +809,6 @@ async def process_promo(message: Message, state: FSMContext):
 
     if promo_code in PROMO_CODES:
         discount = PROMO_CODES[promo_code]
-        
-        # СОХРАНЯЕМ СКИДКУ В STATE
         await state.update_data(discount=discount)
         await state.clear()
         
@@ -1025,10 +1024,11 @@ async def main():
     
     print("=" * 40)
     print("🤖 Бот полностью готов!")
-    print("📱 Команды: /start, /language, /reset, /test67")
+    print("📱 Команды: /start, /language, /test67")
     print("🧪 Тестовый тариф: /test67")
     print("💾 Данные сохраняются в SQLite")
     print("🔗 Ссылки действуют 30 секунд")
+    print("🎁 Промокоды: VIP10, SUPER25, HOMAKE40, BANK50, LOLIPOP80")
     print("=" * 40)
     
     await dp.start_polling(bot)
