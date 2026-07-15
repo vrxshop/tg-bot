@@ -61,6 +61,7 @@ CHANNEL_IDS = {
 # ==================================================
 DB_PATH = "users.db"
 
+
 def init_db():
     """Создаёт таблицу, если её нет"""
     conn = sqlite3.connect(DB_PATH)
