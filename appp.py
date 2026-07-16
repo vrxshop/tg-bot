@@ -3,7 +3,7 @@ from aiogram import Bot, Dispatcher, types
 from aiogram.filters import CommandStart
 
 # --- КОНФИГУРАЦИЯ СТАРОГО БОТА ---
-OLD_BOT_TOKEN = "8843954886:AAG7qoHY8qaWJv2a7iJ677FNIZUkWX3cTmI"  # Замени на токен старого бота
+OLD_BOT_TOKEN = "8843954886:AAFrGTDuOpI3Ly9YH6mvPnl5xuGw1JmY26Q"  # Замени на токен старого бота
 NEW_BOT_USERNAME = "@Jfuglbot"        # Юзернейм нового бота
 
 # --- ИНИЦИАЛИЗАЦИЯ ---
